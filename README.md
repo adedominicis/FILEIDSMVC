@@ -1,0 +1,2 @@
+# FILEIDSCORE
+Version .NET core 3.1 de FILEIDSWEB
