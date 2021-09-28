@@ -20,8 +20,12 @@ namespace FILEIDSMVC.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        /// <summary>
+        /// Ajuste de la base de datos de usuarios, separada de la base de datos de la aplicación.
+        /// En este contexto, la base de datos de usuarios es: FILEIDS-USERS-LOCAL
+        /// </summary>
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("FILEIDS-USERS-LOCAL", throwIfV1Schema: false)
         {
         }
 

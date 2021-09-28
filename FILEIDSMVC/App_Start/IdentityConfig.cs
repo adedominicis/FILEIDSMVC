@@ -51,9 +51,11 @@ namespace FILEIDSMVC
             };
 
             // Configure validation logic for passwords
+            // Logica de validación para passwords.
+           
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
+                RequiredLength = 10,
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
@@ -69,12 +71,12 @@ namespace FILEIDSMVC
             // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
             {
-                MessageFormat = "Your security code is {0}"
+                MessageFormat = "Tu código de seguridad es {0}"
             });
             manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationUser>
             {
-                Subject = "Security Code",
-                BodyFormat = "Your security code is {0}"
+                Subject = "Código de seguridad",
+                BodyFormat = "Tu código de seguridad es {0}"
             });
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
