@@ -13,16 +13,16 @@ namespace FILEIDSMVC.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult RegistrarArchivo()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Registro de archivos";
 
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult ListarArchivos()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Archivos registrados";
 
             return View();
         }
