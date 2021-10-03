@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using FILEIDSWEB_DATA_ACCESS.Logging;
 using FILEIDSWEB_DATA_ACCESS.Model;
+using System.Collections.Generic;
 
 namespace FILEIDSWEB_DATA_ACCESS
 {
@@ -36,14 +37,13 @@ namespace FILEIDSWEB_DATA_ACCESS
                 switch (dbIndex)
                 {
                     case 1:
-                        conName = "localtest";
+                        conName = "FILEIDS-APP-LOCAL";
                         break;
                     case 2:
                         break;
                     default:
                         break;
                 }
-
                 conStr = ConfigurationManager.ConnectionStrings[conName].ConnectionString;
                 connection = new SqlConnection(conStr);
                 connection.Open();
@@ -95,13 +95,13 @@ namespace FILEIDSWEB_DATA_ACCESS
         }
 
         // Obtener un objeto FileMetaData a partir de uno existente, refrescando desde la DB
-        public FileMetaData getFileMetaDataFromDB(FileMetaData pb)
+        public FileMetaData getFileMetaDataFromDB(FileMetaData fileMd)
         {
             try
             {
 
                 //Consulta
-                string query = q.execGetFilePropertiesFromId(pb.Id);
+                string query = q.execGetFilePropertiesFromId(fileMd.Id);
                 //Conectarse
                 startConnection();
 
@@ -117,24 +117,24 @@ namespace FILEIDSWEB_DATA_ACCESS
                 {
                     foreach (DataRow row in tbl.Rows)
                     {
-                        pb.DescriptorEs = row[0].ToString();
-                        pb.DescriptorEn = row[1].ToString();
-                        pb.Oemsku = row[2].ToString();
-                        pb.DescriptorExtra = row[3].ToString();
-                        pb.IdExtension = int.Parse(row[5].ToString());
+                        fileMd.DescriptorEs = row[0].ToString();
+                        fileMd.DescriptorEn = row[1].ToString();
+                        fileMd.Oemsku = row[2].ToString();
+                        fileMd.DescriptorExtra = row[3].ToString();
+                        fileMd.IdExtension = int.Parse(row[5].ToString());
                     }
                 }
                 else
                 {
-                    pb.DescriptorEs = "No encontrado";
-                    pb.DescriptorEn = "Not found";
-                    pb.Oemsku = "";
-                    pb.DescriptorExtra = "";
-                    pb.IdExtension = -1;
+                    fileMd.DescriptorEs = "No encontrado";
+                    fileMd.DescriptorEn = "Not found";
+                    fileMd.Oemsku = "";
+                    fileMd.DescriptorExtra = "";
+                    fileMd.IdExtension = -1;
                 }
 
                 // Datos de tablas entregables y proyectos
-                query = q.execGetFileProjectAssociationFromId(pb.Id);
+                query = q.execGetFileProjectAssociationFromId(fileMd.Id);
                 dataAdapter = new SqlDataAdapter(query, connection);
                 dataAdapter.Fill(ds, "proyectos");
                 tbl = ds.Tables["proyectos"];
@@ -144,14 +144,14 @@ namespace FILEIDSWEB_DATA_ACCESS
                     foreach (DataRow row in tbl.Rows)
                     {
                         //pb.Proyecto= row[0].ToString();
-                        pb.IdTipoEntregable = int.Parse(row[3].ToString());
-                        pb.IdProyecto = int.Parse(row[4].ToString());
+                        fileMd.IdTipoEntregable = int.Parse(row[3].ToString());
+                        fileMd.IdProyecto = int.Parse(row[4].ToString());
                     }
                 }
                 else
                 {
-                    pb.IdTipoEntregable = 0;
-                    pb.IdProyecto = 0;
+                    fileMd.IdTipoEntregable = 0;
+                    fileMd.IdProyecto = 0;
                 }
 
             }
@@ -163,12 +163,12 @@ namespace FILEIDSWEB_DATA_ACCESS
             {
                 connection.Close();
             }
-            return pb;
+            return fileMd;
 
         }
 
         // Agregar un nuevo registro en la DB desde un FileMetaData
-        public FileMetaData addRecord(FileMetaData pb)
+        public FileMetaData addRecord(FileMetaData fileMd)
         {
 
             try
@@ -176,7 +176,7 @@ namespace FILEIDSWEB_DATA_ACCESS
 
                 // Consulta
 
-                string query = q.execInsertFileProperties(pb);
+                string query = q.execInsertFileProperties(fileMd);
 
                 // Verificar estado de la conexion
                 startConnection();
@@ -184,13 +184,13 @@ namespace FILEIDSWEB_DATA_ACCESS
                 SqlCommand command = new SqlCommand(query, connection);
                 //Ejecutar procedimiento para insertar en tabla Archivos y retornar ID
                 string registeredID = command.ExecuteScalar().ToString();
-                pb.Id = registeredID;
+                fileMd.Id = registeredID;
 
                 //Ejecutar procedimiento para insertar en tabla Entregables.
-                query = q.execInsertFileProjectAssociations(pb);
+                query = q.execInsertFileProjectAssociations(fileMd);
                 command = new SqlCommand(query, connection);
                 command.ExecuteScalar();
-                return pb;
+                return fileMd;
             }
             catch (Exception ex)
             {
@@ -295,7 +295,11 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
             finally
             {
-                connection.Close();
+                if (connection!=null)
+                {
+                    connection.Close();
+                }
+                
             }
             return null;
         }
@@ -367,21 +371,42 @@ namespace FILEIDSWEB_DATA_ACCESS
             return listaTipos;
         }
 
-        // Obtener proyectos disponibles para llenar combobox
-        public ObservableCollection<string> getComboBoxData(string query)
+        /// <summary>
+        /// Listado configurado para alimentar @Html.DropDownList en MVC.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public List<(string, string)> getComboBoxData(string query)
         {
             startConnection();
-            ObservableCollection<string> lista = new ObservableCollection<string>();
+            List<(string,string)> lista = new List<(string, string)>();
             DataTable dataTable = genericSelectQuery(query);
             if (dataTable != null)
             {
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    lista.Add(row[0].ToString());
+                    ( string Value, string Text) rowTuple= (row[0].ToString(), row[1].ToString());
+                    lista.Add(rowTuple);
                 }
             }
             return lista;
         }
+
+        // Obtener proyectos disponibles para llenar combobox
+        //public ObservableCollection<string> getComboBoxData(string query)
+        //{
+        //    startConnection();
+        //    ObservableCollection<string> lista = new ObservableCollection<string>();
+        //    DataTable dataTable = genericSelectQuery(query);
+        //    if (dataTable != null)
+        //    {
+        //        foreach (DataRow row in dataTable.Rows)
+        //        {
+        //            lista.Add(row[0].ToString());
+        //        }
+        //    }
+        //    return lista;
+        //}
 
         //Obtener el id de una extension de archivo particular.
         public string getFileIdFromExtension(string extension)

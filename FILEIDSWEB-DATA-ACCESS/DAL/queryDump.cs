@@ -2,7 +2,7 @@
 
 namespace FILEIDSWEB_DATA_ACCESS
 {
-    internal class queryDump
+    public class queryDump
     {
 
         #region DATABASE VIEWS

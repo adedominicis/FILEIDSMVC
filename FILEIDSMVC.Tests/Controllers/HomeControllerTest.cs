@@ -26,26 +26,26 @@ namespace FILEIDSMVC.Tests.Controllers
         }
 
         [TestMethod]
-        public void About()
+        public void RegistrarArchivo()
         {
             // Arrange
             HomeController controller = new HomeController();
 
             // Act
-            ViewResult result = controller.About() as ViewResult;
+            ViewResult result = controller.RegistrarArchivo() as ViewResult;
 
             // Assert
             Assert.AreEqual("Your application description page.", result.ViewBag.Message);
         }
 
         [TestMethod]
-        public void Contact()
+        public void ListarArchivos()
         {
             // Arrange
             HomeController controller = new HomeController();
 
             // Act
-            ViewResult result = controller.Contact() as ViewResult;
+            ViewResult result = controller.ListarArchivos() as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
