@@ -1,27 +1,89 @@
 ﻿@model FILEIDSMVC.Models.RegistroArchivoModel
 
 @{
-    ViewBag.Title = "RegistrarArchivo";
-
+    ViewBag.Title = "Registrar nuevo archivo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<br />
+<br />
+<br />
 
-<h2>@ViewBag.Title.</h2>
-
-@using (Html.BeginForm("DespuesRegistro", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("RegistrarArchivo", "Home", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Registro de nuevos archivos</h4>
-    @Html.DropDownListFor(m => m.IdExtension,(List<SelectListItem>)Model.Extensiones)
+
+<div class="form-horizontal">
+    <h3>Registrar nuevo archivo</h3>
+    <h4 class="text-danger">@ViewBag.ErrorMessages</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Registrar" />
+        @Html.LabelFor(model => model.DescriptorEs, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DescriptorEs, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DescriptorEs, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DescriptorEn, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DescriptorEn, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DescriptorEn, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DescriptorExtra, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DescriptorExtra, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DescriptorExtra, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.OemSku, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.OemSku, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.OemSku, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Proyectos, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.IdProyecto, (List<SelectListItem>)Model.Proyectos, htmlAttributes: new { @class = "btn btn-secondary dropdown-toggle" })
+            @Html.ValidationMessageFor(model => model.Proyectos, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div>
+            @Html.LabelFor(model => model.Archivo, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        <div>
+            <input type="file" class="custom-file-input col-md-10" name="Archivo" required>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Para mostrar nombre del archivo al cargar.
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Registrar archivo" class="btn btn-primary" required />
+        </div>
+    </div>
+</div>
 }
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-
-
-
+<div>
+    @Html.ActionLink("Volver", "Index")
+</div>

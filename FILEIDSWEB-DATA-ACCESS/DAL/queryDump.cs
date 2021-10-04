@@ -9,19 +9,17 @@ namespace FILEIDSWEB_DATA_ACCESS
 
         public string viewPropiedadesArchivos { get { return "select * from viewPropiedadesArchivos order by ID desc"; } }
 
-        public string viewnNombresArchivos { get { return "select * from nombres_archivos order by 'nombre archivo'  desc"; } }
+        public string viewNombresArchivos { get { return "select * from nombres_archivos order by 'nombre archivo'  desc"; } }
 
-
+        public string viewNombresProyectos { get { return "select * from viewNombresProyectos "; } }
 
         public string viewNombresExtensiones { get { return "select * from viewNombresExtensiones"; } }
 
         public string viewNombresTiposEntregables { get { return "select * from viewNombresTiposEntregables"; } }
 
-
-        //Esto no es un view pero puede serlo.
-        public string nombresProyectos { get { return "select upper(descriptores) from proyectos"; } }
-
         public string viewNombresArchivosEntregables { get { return @"select*from archivos"; } }
+
+        public string viewExtensiones { get { return @"select * from viewExtensiones"; } }
 
         #endregion
 

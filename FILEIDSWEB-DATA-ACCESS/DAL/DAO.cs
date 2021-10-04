@@ -186,10 +186,10 @@ namespace FILEIDSWEB_DATA_ACCESS
                 string registeredID = command.ExecuteScalar().ToString();
                 fileMd.Id = registeredID;
 
-                //Ejecutar procedimiento para insertar en tabla Entregables.
-                query = q.execInsertFileProjectAssociations(fileMd);
-                command = new SqlCommand(query, connection);
-                command.ExecuteScalar();
+                //Ejecutar procedimiento para insertar en tabla de proyectos. Esto va a ser deprecado
+                //query = q.execInsertFileProjectAssociations(fileMd);
+                //command = new SqlCommand(query, connection);
+                //command.ExecuteScalar();
                 return fileMd;
             }
             catch (Exception ex)
@@ -353,17 +353,17 @@ namespace FILEIDSWEB_DATA_ACCESS
 
         #region Queries especificos que deben ser actualizados a tipos más genéricos basados en querydump y procedimientos almacenados
         // Obtener todos los tipos de archivo para llenar combobox
-        public ObservableCollection<string> getFileExtensions()
+        public List<Extensiones> getFileExtensions()
         {
             startConnection();
-            ObservableCollection<string> listaTipos = new ObservableCollection<string>();
-            DataTable extensiones = genericSelectQuery(q.viewNombresExtensiones);
+            List<Extensiones> listaTipos = new List<Extensiones>();
+            DataTable extensiones = genericSelectQuery(q.viewExtensiones);
 
             if (extensiones != null)
             {
                 foreach (DataRow row in extensiones.Rows)
                 {
-                    listaTipos.Add(row[0].ToString());
+                    listaTipos.Add(new Extensiones { Id = Convert.ToInt32(row[0]), Extension = row[1].ToString() });
                 }
 
             }

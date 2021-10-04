@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,8 +45,10 @@
   <ItemGroup>
     <Compile Include="DAL\DAO.cs" />
     <Compile Include="DAL\queryDump.cs" />
+    <Compile Include="FileManagement\FileManager.cs" />
     <Compile Include="Logging\Enumeraciones.cs" />
     <Compile Include="Logging\ErrorHandler.cs" />
+    <Compile Include="Model\Extensiones.cs" />
     <Compile Include="Model\FileMetaData.cs" />
     <Compile Include="Model\Ruta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
