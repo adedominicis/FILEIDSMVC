@@ -1,14 +1,51 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<FILEIDSMVC.Models.DirectoriosModel>
+
+@{
+    ViewBag.Title = "Directorios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <div class="jumbotron bg-info" >
-        <div class="container">
-            <h1>FILEIDS</h1>
-            <p class="lead">Sistema de control de versiones</p>
-            <hr class="my-4">
-            <p>Numeros de parte, previsualización, control de versiones y respaldo aqui</p>
-            <p class="lead">
-        </div>
-    </div>
+
+
+@*<div class="jumbotron bg-info">
+
+    </div>*@
+<div class="container">
+
+    <h1>Proyectos activos</h1>
+    <p class="lead">
+
+        <a type="button" href='@Url.Action("CrearProyecto", "Home")' class="btn btn-primary" hre>Crear nuevo proyecto</a>
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NombreDirectorio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DescriptorDirectorio)
+                </th>
+                <th>
+                    Acciones
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreDirectorio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DescriptorDirectorio)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Detalles", "Index", "Explorer", new { @class = "btn btn-primary" })
+                    </td>
+                </tr>
+            }
+
+        </table>
+</div>
 

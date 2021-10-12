@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FILEIDSMVC.Tests", "..\FILE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FILEIDSWEB-DATA-ACCESS", "..\FILEIDSWEB-DATA-ACCESS\FILEIDSWEB-DATA-ACCESS.csproj", "{49006DCC-04EA-4F82-AB2F-4C6CB73D70A2}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "FILEIDS-DB", "..\FILEIDS-DB\FILEIDS-DB.sqlproj", "{934E448F-AEA2-4B12-B8C5-0593235B923B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{49006DCC-04EA-4F82-AB2F-4C6CB73D70A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49006DCC-04EA-4F82-AB2F-4C6CB73D70A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49006DCC-04EA-4F82-AB2F-4C6CB73D70A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{934E448F-AEA2-4B12-B8C5-0593235B923B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{934E448F-AEA2-4B12-B8C5-0593235B923B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{934E448F-AEA2-4B12-B8C5-0593235B923B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{934E448F-AEA2-4B12-B8C5-0593235B923B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{934E448F-AEA2-4B12-B8C5-0593235B923B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{934E448F-AEA2-4B12-B8C5-0593235B923B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

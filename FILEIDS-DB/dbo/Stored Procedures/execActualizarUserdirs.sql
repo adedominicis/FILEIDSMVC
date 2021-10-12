@@ -1,0 +1,25 @@
+﻿--create procedure execActualizarUserdirs(
+--	@userlogin varchar(60),
+--	@usercache varchar(255),
+--	@useroem varchar(255),
+--	@userproyectos varchar(255),
+--	@userproductos varchar(255))
+--as
+--begin
+--	declare @userid int;
+--	/*Obtener id del usuario desde el login*/
+--	select @userid=id
+--	from usuarios
+--	where userlogin=@userlogin
+--	if (select count(*)
+--	from userdirs
+--	where id_usuario=@userid)=0
+--    begin
+--		insert into userdirs
+--		values(@userid, @usercache, @useroem, @userproyectos, @userproductos)
+--	end
+--    else
+--    begin
+--		update userdirs set usercache=@usercache,useroem=@useroem,userproductos=@userproductos,userproyectos=@userproyectos where id_usuario=@userid
+--	end
+--end

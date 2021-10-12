@@ -1,0 +1,14 @@
+﻿--create procedure insertFileProperties(
+--	@descriptores varchar(255),
+--	@descriptoren varchar(255),
+--	@oemsku varchar(255),
+--	@idextension int,
+--	@descriptorextra varchar(255))
+--as
+--begin
+--	insert into [metadata]
+--		(descriptores, descriptoren, oemsku, id_extension, descriptorextra)
+--	OUTPUT
+--	INSERTED.ID
+--	VALUES(@descriptores, @descriptoren, @oemsku, @idextension, @descriptorextra)
+--end

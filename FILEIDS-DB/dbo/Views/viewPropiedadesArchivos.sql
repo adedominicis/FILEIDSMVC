@@ -1,0 +1,16 @@
+﻿--create view viewPropiedadesArchivos
+--as
+--	select format(archivos.id,'000-000') as 'ID',
+--		extensiones.nombre as 'TIPO',
+--		tipos_entregables.abreviatura as 'ENTREGABLE',
+--		archivos.descriptores as 'DESCRIPTOR ES',
+--		archivos.descriptoren as 'DESCRIPTOR EN',
+--		archivos.descriptorextra as 'DESCRIPTOR EXTRA',
+--		archivos.oemsku as 'OEM SKU',
+--		proyectos.descriptores as 'PROYECTO',
+--		proyectos.codigo as 'COD PROYECTO'
+--	from archivos
+--		inner join extensiones on extensiones.id=archivos.id_extension
+--		left join entregables on archivos.id=entregables.id_archivo
+--		left join tipos_entregables on tipos_entregables.id=entregables.id_tipo
+--		left join proyectos on entregables.id_proyecto=proyectos.id

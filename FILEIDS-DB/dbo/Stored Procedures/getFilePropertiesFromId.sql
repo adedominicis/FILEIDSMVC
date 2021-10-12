@@ -1,0 +1,13 @@
+﻿--create procedure getFilePropertiesFromId(@id INT)
+--as
+--begin
+--	select
+--		[metadata].descriptores as "DescriptorES",
+--		[metadata].descriptoren as "DescriptorEN",
+--		[metadata].oemsku as "OEMSKU",
+--		[metadata].descriptorextra as "DescriptorEXTRA",
+--		extensiones.extension as "Extension",
+--		extensiones.id as "id Extension"
+--	from [metadata], extensiones
+--	where [metadata].id=@id and [metadata].id_extension=extensiones.id
+--end;

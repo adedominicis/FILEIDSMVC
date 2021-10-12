@@ -1,0 +1,32 @@
+﻿--create procedure buscarArchivosLocalesLike
+--	@keywords varchar(255)
+--as
+--begin
+--	set @keywords = concat('%',REPLACE(@keywords,' ','%'),'%')
+
+--	select format(archivos.id,'000-000') as 'ID',
+--		rutas.ruta as 'RUTA',
+--		tipos_entregables.abreviatura as 'ENTREGABLE',
+--		archivos.descriptores as 'DESCRIPTOR ES',
+--		archivos.descriptoren as 'DESCRIPTOR EN',
+--		archivos.descriptorextra as 'DESCRIPTOR EXTRA',
+--		archivos.oemsku as 'OEM SKU',
+--		proyectos.descriptores as 'PROYECTO',
+--		proyectos.codigo as 'COD PROYECTO'
+--	from archivos
+--		inner join extensiones on extensiones.id=archivos.id_extension
+--		inner join rutas on rutas.id_archivo=archivos.id
+--		left join entregables on archivos.id=entregables.id_archivo
+--		left join tipos_entregables on tipos_entregables.id=entregables.id_tipo
+--		left join proyectos on entregables.id_proyecto=proyectos.id
+--	where 
+--archivos.descriptoren like @keywords or
+--		archivos.descriptores like @keywords or
+--		archivos.descriptorextra like @keywords or
+--		archivos.id like @keywords or
+--		proyectos.codigo like @keywords or
+--		proyectos.descriptores like @keywords or
+--		extensiones.nombre like @keywords or
+--		tipos_entregables.abreviatura like @keywords
+
+--end
