@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FILEIDSMVC.Models.DirectoriosModel>
+﻿@model IEnumerable<FILEIDSMVC.Models.ProyectosModel>
 
 @{
     ViewBag.Title = "Directorios";
@@ -7,57 +7,7 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <div class="wrapper wrapper-full-page" style="border-radius:10px">
-        <div>
-
-            <div class="container">
-                <div class="row">
-                    <button class="btn btn-just-icon btn-white btn-fab btn-round">
-                        <i class="material-icons text_align-center" style="color:white;background-color:yellowgreen">build</i>
-                    </button>
-                    <br />
-                    <h2> Proyectos</h2>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 col-xs-6">
-                        <div class="card-iconos card-pricing ">
-                            <div class="card-body">
-                                <a href="/Explorer/Usuarios">
-                                    <div class="card-icon icon-green ">
-                                        <i class="material-icons">accessibility</i>
-                                    </div>
-                                    <h3 class="card-title">Proyectos</h3>
-                                    <p class="card-description">Gestiona proyectos</p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-xs-6">
-                        <div class="card-iconos card-pricing ">
-                            <div class="card-body">
-                                <a href="/Explorer/Usuarios">
-                                    <div class="card-icon icon-green ">
-                                        <i class="material-icons">report_problem</i>
-                                    </div>
-                                    <h3 class="card-title">Design Review</h3>
-                                    <p class="card-description">Comenta y comparte información</p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 ml-auto mr-auto text-center">
-                        <h2 class="title"></h2>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <h1>PANTALLA PRINCIPAL CON BALDOSAS/TILES</h1>
 }
 else
 {

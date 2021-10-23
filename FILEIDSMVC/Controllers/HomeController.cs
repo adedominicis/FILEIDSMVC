@@ -20,9 +20,9 @@ namespace FILEIDSMVC.Controllers
         queryDump q = new queryDump();
         public ActionResult Index()
         {
-            List<DirectoriosModel> listDirs = new List<DirectoriosModel>();
-            listDirs.Add(new DirectoriosModel() { DescriptorDirectorio = "Un directorio", DirectorioActivo = true, NombreDirectorio = "Test" });
-            listDirs.Add(new DirectoriosModel() { DescriptorDirectorio = "Otro directorio", DirectorioActivo = true, NombreDirectorio = "Otro" });
+            List<ProyectosModel> listDirs = new List<ProyectosModel>();
+            listDirs.Add(new ProyectosModel() { DescriptorDirectorio = "Un directorio", DirectorioActivo = true, NombreDirectorio = "Test" });
+            listDirs.Add(new ProyectosModel() { DescriptorDirectorio = "Otro directorio", DirectorioActivo = true, NombreDirectorio = "Otro" });
 
             return View(listDirs);
         }
