@@ -25,6 +25,11 @@ namespace FILEIDSMVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            // Bundle de materialize.
+            bundles.Add(new ScriptBundle("~/bundles/materialize").Include(
+                  "~/Content/materialize/materialize.css"));
+
         }
     }
 }
