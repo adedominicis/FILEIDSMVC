@@ -1,4 +1,6 @@
-﻿using FILEIDSWEB_DATA_ACCESS.Model;
+﻿using FILEIDSMVC.Models;
+using FILEIDSWEB_DATA_ACCESS.Model;
+using System;
 
 namespace FILEIDSWEB_DATA_ACCESS
 {
@@ -26,10 +28,33 @@ namespace FILEIDSWEB_DATA_ACCESS
 
         #region Procedimientos Almacenados.
 
+        /// <summary>
+        /// Crear directorio raiz en la DB.
+        /// </summary>
+        /// <param name="proyecto"></param>
+        /// <returns></returns>
+        public string CrearDirectorioRaiz(ProyectosModel proyecto)
+        {
+            return string.Format("exec CrearDirectorioRaiz '{0}','{1}'", proyecto.NombreDirectorio, proyecto.DescriptorDirectorio);
+        }
+
+        /// <summary>
+        /// Lictar directorios raiz
+        /// </summary>
+        /// <returns></returns>
+        public string ListarDirectorioRaiz()
+        {
+            return string.Format("exec ListarDirectorioRaiz");
+        }
+
+
         public string execProyectoDesdeId(string id)
         {
             return @"exec getNombreProyecto '" + id + "'";
         }
+
+
+
         public string execNombreArchivoDesdeId(string id)
         {
             return @"exec getNombreArchivo '" + id + "'";

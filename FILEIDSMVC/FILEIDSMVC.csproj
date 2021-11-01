@@ -395,7 +395,7 @@
     <Content Include="Views\Home\RegistrarArchivo.cshtml" />
     <Content Include="Views\Home\ViewFile.cshtml" />
     <Content Include="Views\Shared\CrearProyecto.cshtml" />
-    <Content Include="Views\Proyectos\Index.cshtml" />
+    <Content Include="Views\Proyectos\Proyectos.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper.js.flow" />
@@ -407,6 +407,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\DesignReview\Index.cshtml" />
+    <Content Include="Views\Proyectos\CrearProyecto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

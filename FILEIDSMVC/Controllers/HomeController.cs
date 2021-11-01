@@ -72,14 +72,7 @@ namespace FILEIDSMVC.Controllers
 
         }
 
-        /// <summary>
-        /// Crear un nuevo proyecto.
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult CrearProyecto()
-        {
-            return View();
-        }
+
 
         #region Helpers
         private bool registerAndTransfer(RegistroArchivoModel model)

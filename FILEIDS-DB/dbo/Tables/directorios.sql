@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[directorios] (
     [id_directorio]     INT           IDENTITY (1, 1) primary key NOT NULL,
-    [nombre_directorio] VARCHAR (200) NULL,
-    [descriptor_directorio]      VARCHAR (500) NULL
+    [nombre_directorio] VARCHAR (200) NOT NULL,
+    [descriptor_directorio]      VARCHAR (500) NOT NULL, 
+    [activo] BIT NOT NULL DEFAULT 1
 );
 

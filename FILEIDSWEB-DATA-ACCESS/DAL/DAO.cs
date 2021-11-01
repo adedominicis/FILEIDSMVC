@@ -8,6 +8,7 @@ using FILEIDSWEB_DATA_ACCESS.Logging;
 using FILEIDSWEB_DATA_ACCESS.Model;
 using System.Collections.Generic;
 
+
 namespace FILEIDSWEB_DATA_ACCESS
 {
     public class DAO
@@ -274,7 +275,6 @@ namespace FILEIDSWEB_DATA_ACCESS
         // Consulta generica "select" que retorna un datatable
         public DataTable genericSelectQuery(string query)
         {
-
             try
             {
                 // Check for an available connection
@@ -349,9 +349,67 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
 
         }
+
+        /// <summary>
+        /// Query generico List<string>
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public List<string> genericListQuery(string query)
+        {
+            startConnection();
+            List<string> lista = new List<string>();
+            DataTable tabla = genericSelectQuery(query);
+
+            if (tabla != null)
+            {
+                foreach (DataRow row in tabla.Rows)
+                {
+                    lista.Add(row[0].ToString());
+                }
+            }
+
+            return lista;
+        }
+
+
+
         #endregion
 
-        #region Queries especificos que deben ser actualizados a tipos más genéricos basados en querydump y procedimientos almacenados
+        #region Consultas con retorno de objetos especificos.
+
+        /// <summary>
+        /// Obtener listado de directorios raiz (proyectos)
+        /// </summary>
+        /// <returns></returns>
+
+        public List<Proyecto> getListaProyectos()
+        {
+            List<Proyecto> lista = new List<Proyecto>();
+            startConnection();
+
+            DataTable res = genericSelectQuery(q.ListarDirectorioRaiz());
+
+            if (res.Rows.Count > 0)
+            {
+                foreach (DataRow fila in res.Rows)
+                {
+                    lista.Add(new Proyecto() { 
+                        IdDirectorio= Convert.ToInt32(fila[0]),
+                        NombreDirectorio = fila[1].ToString(),
+                        DescriptorDirectorio = fila[2].ToString(),
+                        DirectorioActivo= Convert.ToBoolean(fila[3])
+                    });
+                }
+            }
+            return lista;
+        }
+
+        #endregion
+
+        #region Consultas Legacy
+        
+
         // Obtener todos los tipos de archivo para llenar combobox
         public List<Extensiones> getFileExtensions()
         {
@@ -514,9 +572,10 @@ namespace FILEIDSWEB_DATA_ACCESS
             return false;
         }
 
-        #endregion
+
+        
     }
 
-
+    #endregion
 }
 

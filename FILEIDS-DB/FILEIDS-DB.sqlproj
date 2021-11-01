@@ -107,6 +107,8 @@
     <Build Include="dbo\Stored Procedures\execLogExceptions.sql" />
     <Build Include="dbo\Stored Procedures\fillDefaults.sql" />
     <Build Include="dbo\Tables\relaciones.sql" />
+    <Build Include="dbo\Stored Procedures\CrearDirectorioRaiz.sql" />
+    <Build Include="dbo\Stored Procedures\ListarDirectorioRaiz.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="FILEIDS-DB.refactorlog" />

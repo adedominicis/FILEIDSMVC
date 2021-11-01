@@ -1,0 +1,75 @@
+﻿@model FILEIDSMVC.Models.ProyectosModel
+@{
+    ViewBag.Title = "Proyectos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>Proyectos activos</h2>
+                </div>
+                <div class="col-sm">
+                    <a type="button" href='@Url.Action("CrearProyecto", "Proyectos")' class="btn btn-primary" hre>Crear nuevo proyecto</a>
+                </div>
+                <div class="col-sm">
+
+                </div>
+            </div>
+        </div>
+
+        <p class="lead">
+
+            <table class="table">
+                <tr>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.NombreDirectorio)*@
+                        Directorio raiz
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.DescriptorDirectorio)*@
+                        Descripcion
+                    </th>
+                    <th>
+                        Acciones
+                    </th>
+                    <th></th>
+                </tr>
+                @if (Model != null)
+                {
+
+                    foreach (var item in Model.ListaDirectorios)
+                    {
+                        if (item.DirectorioActivo)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NombreDirectorio)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DescriptorDirectorio)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Explorar", "Detalles", "Proyectos", new { IdDirectorio = item.IdDirectorio }, new { @class = "btn btn-info" })
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Eliminar", "Eliminar", "Proyectos", new { IdDirectorio = item.IdDirectorio }, new { @class = "btn btn-warning" })
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                }
+
+
+            </table>
+    </div>
+}
+else
+{
+    Context.Response.Redirect("/Account/Login");
+}
+

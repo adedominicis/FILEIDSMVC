@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\FILEIDSMVC\packages\Dapper.2.0.90\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="FILEIDSMVC">
+      <HintPath>..\FILEIDSMVC\bin\FILEIDSMVC.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -50,6 +56,7 @@
     <Compile Include="Logging\ErrorHandler.cs" />
     <Compile Include="Model\Extensiones.cs" />
     <Compile Include="Model\FileMetaData.cs" />
+    <Compile Include="Model\Proyecto.cs" />
     <Compile Include="Model\Ruta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

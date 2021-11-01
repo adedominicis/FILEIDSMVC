@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FILEIDSWEB_DATA_ACCESS.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -27,5 +28,14 @@ namespace FILEIDSMVC.Models
         /// </summary>
         public bool DirectorioActivo { get; set; }
 
+        /// <summary>
+        /// Id interno del directorio
+        /// </summary>
+        public int IdDirectorio { get; set; }
+
+        /// <summary>
+        /// Listado de proyectos traidos de la DB.
+        /// </summary>
+        public List<Proyecto> ListaDirectorios { get; set; }
     }
 }
