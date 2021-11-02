@@ -6,6 +6,12 @@ AS
 	--Verificar si existe el nombre del directorio
 	if exists(select * from directorios where nombre_directorio like @Nombre)
 	begin
+
+		update directorios
+		set nombre_directorio=@Nombre,
+		descriptor_directorio=@Descripcion,
+		activo=1
+		where nombre_directorio like @Nombre
 		select 0
 	end
 	else

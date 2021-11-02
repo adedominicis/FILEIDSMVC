@@ -1,11 +1,10 @@
 ﻿@model FILEIDSMVC.Models.ProyectosModel
 
 @{
-    ViewBag.Title = "Crear un nuevo proyecto";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Crear un nuevo proyecto</h2>
+<h2>@ViewBag.Title</h2>
 
 
 @if (User.Identity.IsAuthenticated)

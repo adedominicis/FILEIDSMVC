@@ -7,4 +7,5 @@ AS
 	descriptor_directorio as 'DESCRIPCIÓN',
 	activo as 'Es activo'
 	from directorios
+
 RETURN 0

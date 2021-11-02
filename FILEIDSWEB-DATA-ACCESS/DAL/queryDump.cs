@@ -25,7 +25,6 @@ namespace FILEIDSWEB_DATA_ACCESS
 
         #endregion
 
-
         #region Procedimientos Almacenados.
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace FILEIDSWEB_DATA_ACCESS
         }
 
         /// <summary>
-        /// Lictar directorios raiz
+        /// Listar directorios raiz
         /// </summary>
         /// <returns></returns>
         public string ListarDirectorioRaiz()
@@ -47,7 +46,18 @@ namespace FILEIDSWEB_DATA_ACCESS
             return string.Format("exec ListarDirectorioRaiz");
         }
 
+        /// <summary>
+        /// Desactivar directorio raiz.
+        /// </summary>
+        /// <param name="idDirectorio"></param>
+        /// <returns></returns>
+        public string DesactivarDirectorioRaiz(int idDirectorio)
+        {
+            return string.Format("exec DesactivarDirectorioRaiz {0}", idDirectorio);
+        }
+        #endregion
 
+        #region Legacy y no revisados
         public string execProyectoDesdeId(string id)
         {
             return @"exec getNombreProyecto '" + id + "'";
@@ -63,6 +73,9 @@ namespace FILEIDSWEB_DATA_ACCESS
         {
             return @"exec getNombreEntregable '" + id + "'";
         }
+
+
+
         public string execGetBundleDesdeId(string id)
         {
             //En desuso, revisar.
@@ -138,7 +151,6 @@ namespace FILEIDSWEB_DATA_ACCESS
 
 
         #endregion
-
 
         #region Queries convencionales por cambiar a procedimiento almacenado
 

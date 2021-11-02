@@ -15,12 +15,15 @@ namespace FILEIDSMVC.Controllers
         DAO dao = new DAO();
         queryDump q = new queryDump();
 
-        // GET: Explorer
+        /// <summary>
+        /// Pantalla principal de proyectos
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Proyectos()
         {
             ProyectosModel pm = new ProyectosModel();
             pm.ListaDirectorios= dao.getListaProyectos();
-            return View(pm);
+            return View("Proyectos",pm);
         }
 
         /// <summary>
@@ -29,6 +32,7 @@ namespace FILEIDSMVC.Controllers
         /// <returns></returns>
         public ActionResult CrearProyecto()
         {
+            ViewBag.Title = "Crear un nuevo proyecto";
             return View();
         }
 
@@ -37,8 +41,9 @@ namespace FILEIDSMVC.Controllers
         /// </summary>
         /// <param name="proyecto"></param>
         /// <returns></returns>
+        
         [HttpPost]
-        public void CrearProyecto(ProyectosModel proyecto)
+        public ActionResult CrearProyecto(ProyectosModel proyecto)
         {
             string queryReturn;
             ViewBag.ErrorMessages = "";
@@ -48,19 +53,47 @@ namespace FILEIDSMVC.Controllers
                 {
                     queryReturn=dao.singleReturnQuery(q.CrearDirectorioRaiz(proyecto));
                 }
-                Proyectos();
+                proyecto.ListaDirectorios = dao.getListaProyectos();
+                return View("Proyectos", proyecto);
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessages = ex.Message;
-                Proyectos();
+                return View("Proyectos", proyecto);
             }
+
         }
 
-        public void Detalles(ProyectosModel proyecto)
+        /// <summary>
+        /// Detalles del proyecto, esto debe redirigir a la interfaz en donde se agregan nuevas carpetas y archivos.
+        /// </summary>
+        /// <param name="proyecto"></param>
+        public ActionResult Detalles(ProyectosModel proyecto)
         {
-            
-            Proyectos();
+            return View();
+        }
+
+        /// <summary>
+        /// Eliminar proyecto.
+        /// </summary>
+        /// <param name="proyecto"></param>
+
+        public ActionResult Eliminar(ProyectosModel proyecto)
+        {
+            dao.singleReturnQuery(q.DesactivarDirectorioRaiz(proyecto.IdDirectorio));
+            proyecto.ListaDirectorios = dao.getListaProyectos();
+            return View("Proyectos", proyecto);
+        }
+
+        /// <summary>
+        /// Editar
+        /// </summary>
+        /// <param name="proyecto"></param>
+        /// <returns></returns>
+        public ActionResult Editar(ProyectosModel proyecto)
+        {
+            ViewBag.Title = string.Format("Editando: /{0}",proyecto.NombreDirectorio);
+            return View("CrearProyecto",proyecto);
         }
     }
 }
