@@ -1,0 +1,23 @@
+﻿@model FILEIDSMVC.Models.ProyectosModel
+
+@{
+    ViewBag.Title = "DetallesProyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <h2>Detalles de: @Model.NombreDirectorio</h2>
+
+    <div class="container">
+
+    </div>
+
+    <div>
+        @Html.ActionLink("Volver", "Proyectos")
+    </div>
+}
+else
+{
+    Context.Response.Redirect("/Account/Login");
+}

@@ -106,10 +106,12 @@
     <Build Include="dbo\Stored Procedures\execLogin.sql" />
     <Build Include="dbo\Stored Procedures\execLogExceptions.sql" />
     <Build Include="dbo\Stored Procedures\fillDefaults.sql" />
-    <Build Include="dbo\Tables\relaciones.sql" />
     <Build Include="dbo\Stored Procedures\CrearDirectorioRaiz.sql" />
     <Build Include="dbo\Stored Procedures\ListarDirectorioRaiz.sql" />
     <Build Include="dbo\Stored Procedures\DesactivarDirectorioRaiz.sql" />
+    <Build Include="dbo\Stored Procedures\DesarrollarDirectorioRecursivo.sql" />
+    <Build Include="dbo\Stored Procedures\CrearSubDirectorio.sql" />
+    <Build Include="dbo\Stored Procedures\MoverSubDirectorio.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="FILEIDS-DB.refactorlog" />

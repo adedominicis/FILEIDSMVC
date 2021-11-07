@@ -3,6 +3,7 @@
     ViewBag.Title = "Proyectos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @if (User.Identity.IsAuthenticated)
 {
     <div class="container">
@@ -26,12 +27,10 @@
             <table class="table">
                 <tr>
                     <th>
-                        @*@Html.DisplayNameFor(model => model.NombreDirectorio)*@
                         Directorio raiz
                     </th>
                     <th>
-                        @*@Html.DisplayNameFor(model => model.DescriptorDirectorio)*@
-                        Descripcion
+                        Descripción
                     </th>
                     <th>
                         Acciones
@@ -47,7 +46,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.NombreDirectorio)
+                                    \@Html.DisplayFor(modelItem => item.NombreDirectorio)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.DescriptorDirectorio)
@@ -56,13 +55,13 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                @Html.ActionLink("Detalles", "Detalles", "Proyectos", new { IdDirectorio = item.IdDirectorio }, new { @class = "btn btn-info" })
+                                                @Html.ActionLink("Detalles", "DetallesProyecto", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio = item.NombreDirectorio }, new { @class = "btn btn-info" })
                                             </div>
                                             <div class="col-sm-3">
-                                                @Html.ActionLink("Editar", "Editar", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio=item.NombreDirectorio}, new { @class = "btn btn-secondary" })
+                                                @Html.ActionLink("Editar", "Editar", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio = item.NombreDirectorio }, new { @class = "btn btn-secondary" })
                                             </div>
                                             <div class="col-sm-3">
-                                                @Html.ActionLink("Eliminar", "Eliminar", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio=item.NombreDirectorio}, new { @class = "btn btn-warning" })
+                                                @Html.ActionLink("Eliminar", "Eliminar", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio = item.NombreDirectorio }, new { @class = "btn btn-warning" })
                                             </div>
                                         </div>
                                     </div>
@@ -77,6 +76,13 @@
 
             </table>
     </div>
+    <div>
+        @Html.ActionLink("Volver", "Index", "Home")
+    </div>
+
+    @section scripts{
+        <script src="~/Scripts/Controllers/Proyectos.js"></script>
+    }
 }
 else
 {

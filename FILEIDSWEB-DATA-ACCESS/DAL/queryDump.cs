@@ -1,5 +1,4 @@
-﻿using FILEIDSMVC.Models;
-using FILEIDSWEB_DATA_ACCESS.Model;
+﻿using FILEIDSWEB_DATA_ACCESS.Model;
 using System;
 
 namespace FILEIDSWEB_DATA_ACCESS
@@ -32,9 +31,9 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// </summary>
         /// <param name="proyecto"></param>
         /// <returns></returns>
-        public string CrearDirectorioRaiz(ProyectosModel proyecto)
+        public string CrearDirectorioRaiz(Proyecto proyecto)
         {
-            return string.Format("exec CrearDirectorioRaiz '{0}','{1}'", proyecto.NombreDirectorio, proyecto.DescriptorDirectorio);
+            return string.Format("exec CrearDirectorioRaiz '{0}','{1}'",proyecto.NombreDirectorio,proyecto.DescriptorDirectorio );
         }
 
         /// <summary>

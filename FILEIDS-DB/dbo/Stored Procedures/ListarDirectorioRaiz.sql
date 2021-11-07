@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[ListarDirectorioRaiz]
+﻿--Listar todos los directorios raiz.
+CREATE PROCEDURE [dbo].[ListarDirectorioRaiz]
 
 AS
 	SELECT 
@@ -7,5 +8,5 @@ AS
 	descriptor_directorio as 'DESCRIPCIÓN',
 	activo as 'Es activo'
 	from directorios
-
+	where id_padre is null
 RETURN 0

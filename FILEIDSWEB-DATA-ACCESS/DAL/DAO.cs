@@ -383,7 +383,7 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// </summary>
         /// <returns></returns>
 
-        public List<Proyecto> getListaProyectos()
+        public List<Proyecto> ListarDirectorioRaiz()
         {
             List<Proyecto> lista = new List<Proyecto>();
             startConnection();

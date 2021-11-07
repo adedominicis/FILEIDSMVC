@@ -16,19 +16,24 @@ namespace FILEIDSMVC
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+            
+
+            //bundles.Add(new ScriptBundle("~/bundles/sweetalert").Include(
+            //"~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Content/bootstrap.js"));
+
+            //bundles.Add(new ScriptBundle("~/bundles/sweetalert").Include("~/Content/sw.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/sweetalert/sweet-alert.css"));
 
             // Bundle de materialize.
-            bundles.Add(new ScriptBundle("~/bundles/materialize").Include(
-                  "~/Content/materialize/materialize.css"));
+            //bundles.Add(new ScriptBundle("~/bundles/materialize").Include(
+            //      "~/Content/materialize/materialize.css"));
 
         }
     }

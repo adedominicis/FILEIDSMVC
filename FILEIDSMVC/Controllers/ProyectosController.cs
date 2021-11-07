@@ -1,5 +1,6 @@
 ﻿using FILEIDSMVC.Models;
 using FILEIDSWEB_DATA_ACCESS;
+using FILEIDSWEB_DATA_ACCESS.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace FILEIDSMVC.Controllers
         public ActionResult Proyectos()
         {
             ProyectosModel pm = new ProyectosModel();
-            pm.ListaDirectorios= dao.getListaProyectos();
+            pm.ListaDirectorios= dao.ListarDirectorioRaiz();
             return View("Proyectos",pm);
         }
 
@@ -51,9 +52,12 @@ namespace FILEIDSMVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    queryReturn=dao.singleReturnQuery(q.CrearDirectorioRaiz(proyecto));
+                    queryReturn=dao.singleReturnQuery(q.CrearDirectorioRaiz(new Proyecto() {
+                        NombreDirectorio=proyecto.NombreDirectorio,
+                        DescriptorDirectorio=proyecto.DescriptorDirectorio
+                    }));
                 }
-                proyecto.ListaDirectorios = dao.getListaProyectos();
+                proyecto.ListaDirectorios = dao.ListarDirectorioRaiz();
                 return View("Proyectos", proyecto);
             }
             catch (Exception ex)
@@ -68,22 +72,26 @@ namespace FILEIDSMVC.Controllers
         /// Detalles del proyecto, esto debe redirigir a la interfaz en donde se agregan nuevas carpetas y archivos.
         /// </summary>
         /// <param name="proyecto"></param>
-        public ActionResult Detalles(ProyectosModel proyecto)
+        public ActionResult DetallesProyecto(Proyecto proyecto)
         {
-            return View();
+            
+            return View(new ProyectosModel(){ IdDirectorio=proyecto.IdDirectorio,NombreDirectorio=proyecto.NombreDirectorio});
         }
+
 
         /// <summary>
         /// Eliminar proyecto.
         /// </summary>
-        /// <param name="proyecto"></param>
+        /// <param name="proyecto"></param>0
+        /// 
 
         public ActionResult Eliminar(ProyectosModel proyecto)
         {
             dao.singleReturnQuery(q.DesactivarDirectorioRaiz(proyecto.IdDirectorio));
-            proyecto.ListaDirectorios = dao.getListaProyectos();
+            proyecto.ListaDirectorios = dao.ListarDirectorioRaiz();
             return View("Proyectos", proyecto);
         }
+
 
         /// <summary>
         /// Editar
