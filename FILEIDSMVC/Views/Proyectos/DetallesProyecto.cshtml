@@ -7,9 +7,48 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <h2>Detalles de: @Model.NombreDirectorio</h2>
 
-    <div class="container">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h2>Detalles y sistema de archivos</h2>
+                <br />
+                <br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <h4>@Model.NombreDirectorio</h4>
+            </div>
+            <div class="col-8">
+                <h4>Listado de archivos</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+
+            </div>
+            <div class="col-8">
+                <tr>
+                    <td>
+                        Nombre Archivo
+                    </td>
+                    <td>
+                        Ultima version
+                    </td>
+                    <td>
+                        Fecha de modificación
+                    </td>
+                    <td>
+                        Autor
+                    </td>
+
+                </tr>
+            </div>
+
+        </div>
+
 
     </div>
 
