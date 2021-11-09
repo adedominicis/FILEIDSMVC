@@ -96,77 +96,77 @@ namespace FILEIDSWEB_DATA_ACCESS
         }
 
         // Obtener un objeto FileMetaData a partir de uno existente, refrescando desde la DB
-        public FileMetaData getFileMetaDataFromDB(FileMetaData fileMd)
-        {
-            try
-            {
+        //public FileMetaData getFileMetaDataFromDB(FileMetaData fileMd)
+        //{
+        //    try
+        //    {
 
-                //Consulta
-                string query = q.execGetFilePropertiesFromId(fileMd.Id);
-                //Conectarse
-                startConnection();
+        //        //Consulta
+        //        string query = q.execGetFilePropertiesFromId(fileMd.Id);
+        //        //Conectarse
+        //        startConnection();
 
-                //Dataset
-                DataSet ds = new DataSet();
-                //Data adapter
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
-                //Llenar dataset con el resultado de dataAdapter
-                dataAdapter.Fill(ds, "properties");
-                DataTable tbl = ds.Tables["properties"];
-                // Datos de tabla ARCHIVOS y EXTENSIONES
-                if (tbl.Rows.Count > 0)
-                {
-                    foreach (DataRow row in tbl.Rows)
-                    {
-                        fileMd.DescriptorEs = row[0].ToString();
-                        fileMd.DescriptorEn = row[1].ToString();
-                        fileMd.Oemsku = row[2].ToString();
-                        fileMd.DescriptorExtra = row[3].ToString();
-                        fileMd.IdExtension = int.Parse(row[5].ToString());
-                    }
-                }
-                else
-                {
-                    fileMd.DescriptorEs = "No encontrado";
-                    fileMd.DescriptorEn = "Not found";
-                    fileMd.Oemsku = "";
-                    fileMd.DescriptorExtra = "";
-                    fileMd.IdExtension = -1;
-                }
+        //        //Dataset
+        //        DataSet ds = new DataSet();
+        //        //Data adapter
+        //        SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
+        //        //Llenar dataset con el resultado de dataAdapter
+        //        dataAdapter.Fill(ds, "properties");
+        //        DataTable tbl = ds.Tables["properties"];
+        //        // Datos de tabla ARCHIVOS y EXTENSIONES
+        //        if (tbl.Rows.Count > 0)
+        //        {
+        //            foreach (DataRow row in tbl.Rows)
+        //            {
+        //                fileMd.DescriptorEs = row[0].ToString();
+        //                fileMd.DescriptorEn = row[1].ToString();
+        //                fileMd.Oemsku = row[2].ToString();
+        //                fileMd.DescriptorExtra = row[3].ToString();
+        //                fileMd.IdExtension = int.Parse(row[5].ToString());
+        //            }
+        //        }
+        //        else
+        //        {
+        //            fileMd.DescriptorEs = "No encontrado";
+        //            fileMd.DescriptorEn = "Not found";
+        //            fileMd.Oemsku = "";
+        //            fileMd.DescriptorExtra = "";
+        //            fileMd.IdExtension = -1;
+        //        }
 
-                // Datos de tablas entregables y proyectos
-                query = q.execGetFileProjectAssociationFromId(fileMd.Id);
-                dataAdapter = new SqlDataAdapter(query, connection);
-                dataAdapter.Fill(ds, "proyectos");
-                tbl = ds.Tables["proyectos"];
+        //        // Datos de tablas entregables y proyectos
+        //        query = q.execGetFileProjectAssociationFromId(fileMd.Id);
+        //        dataAdapter = new SqlDataAdapter(query, connection);
+        //        dataAdapter.Fill(ds, "proyectos");
+        //        tbl = ds.Tables["proyectos"];
 
-                if (tbl.Rows.Count > 0)
-                {
-                    foreach (DataRow row in tbl.Rows)
-                    {
-                        //pb.Proyecto= row[0].ToString();
-                        fileMd.IdTipoEntregable = int.Parse(row[3].ToString());
-                        fileMd.IdProyecto = int.Parse(row[4].ToString());
-                    }
-                }
-                else
-                {
-                    fileMd.IdTipoEntregable = 0;
-                    fileMd.IdProyecto = 0;
-                }
+        //        if (tbl.Rows.Count > 0)
+        //        {
+        //            foreach (DataRow row in tbl.Rows)
+        //            {
+        //                //pb.Proyecto= row[0].ToString();
+        //                fileMd.IdTipoEntregable = int.Parse(row[3].ToString());
+        //                fileMd.IdProyecto = int.Parse(row[4].ToString());
+        //            }
+        //        }
+        //        else
+        //        {
+        //            fileMd.IdTipoEntregable = 0;
+        //            fileMd.IdProyecto = 0;
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.getFileMetaDataFromDB");
-            }
-            finally
-            {
-                connection.Close();
-            }
-            return fileMd;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.getFileMetaDataFromDB");
+        //    }
+        //    finally
+        //    {
+        //        connection.Close();
+        //    }
+        //    return fileMd;
 
-        }
+        //}
 
         // Agregar un nuevo registro en la DB desde un FileMetaData
         public FileMetaData addRecord(FileMetaData fileMd)
@@ -205,40 +205,40 @@ namespace FILEIDSWEB_DATA_ACCESS
         }
 
         // Actualizar un campo de la base de datos desde un FileMetaData
-        public bool updateRecord(FileMetaData pb)
-        {
-            int rowsAffected = 0;
+        //public bool updateRecord(FileMetaData pb)
+        //{
+        //    int rowsAffected = 0;
 
-            try
-            {
-                //Consulta
-                string query = q.execUpdateArchivos(pb);
-                // Verificar estado de la conexion
-                startConnection();
+        //    try
+        //    {
+        //        Consulta
+        //        string query = q.execUpdateArchivos(pb);
+        //        Verificar estado de la conexion
+        //        startConnection();
 
-                SqlCommand command = new SqlCommand(query, connection);
+        //        SqlCommand command = new SqlCommand(query, connection);
 
-                //Ejecutar comando
-                rowsAffected = command.ExecuteNonQuery();
-                if (rowsAffected > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.updateRecord");
-                return false;
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
+        //        Ejecutar comando
+        //        rowsAffected = command.ExecuteNonQuery();
+        //        if (rowsAffected > 0)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.updateRecord");
+        //        return false;
+        //    }
+        //    finally
+        //    {
+        //        connection.Close();
+        //    }
+        //}
 
         // Consulta generica "select" que retorna un solo string. 
         public string singleReturnQuery(string query)

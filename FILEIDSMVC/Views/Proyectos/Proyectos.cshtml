@@ -53,7 +53,7 @@
                                             <button type="button" class="btn btn-outline-info">Ver archivos</button>
                                         </div>
                                         <div class="col">
-                                            <button type="button" class="btn btn-outline-success">Agregar archivo</button>
+                                            @Html.ActionLink("Agregar Archivo", "RegistrarArchivo", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio = item.NombreDirectorio }, new { @class="btn btn-outline-success" })
                                         </div>
                                         <div class="col">
                                             <button type="button" class="btn btn-outline-danger">Eliminar proyecto</button>

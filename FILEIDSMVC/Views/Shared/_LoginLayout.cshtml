@@ -6,23 +6,28 @@
     <title>@ViewBag.Title FILEIDS-WEB</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @*Font Awesome*@
+    <script src="https://kit.fontawesome.com/ad96a6c395.js" crossorigin="anonymous"></script>
 
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
-    <div class="bg-custom">
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year - FILEIDS-WEB / ADDR / AISV - Login Layout</p>
-            </footer>
-        </div>
+
+    <div class="container">
+        @RenderBody()
     </div>
 
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <hr />
+            <span class="text-muted"><p>&copy; @DateTime.Now.Year - FILEIDS-WEB / ADDR / AISV</p></span>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @*Sweetalert2*@
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

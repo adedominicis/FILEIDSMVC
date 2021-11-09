@@ -90,7 +90,7 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
                 }
 
                 // Path completo del archivo a guardar.
-                ruta.StrRuta = string.Format(@"{0}{1}-{2}{3}", rootDir, fData.getNombreArchivo(), ruta.RevLetter, Path.GetExtension(file.FileName));
+                ruta.StrRuta = string.Format(@"{0}{1}-{2}{3}", rootDir, fData.getNombreArchivoFormateado(), ruta.RevLetter, Path.GetExtension(file.FileName));
                 
                 //Guardar archivo. Es necesario añadir una verificacion
                 file.SaveAs(ruta.StrRuta);

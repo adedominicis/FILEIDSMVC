@@ -101,22 +101,6 @@ namespace FILEIDSWEB_DATA_ACCESS
                 pb.DescriptorExtra + "'";
         }
 
-        public string execInsertFileProjectAssociations(FileMetaData pb)
-        {
-            return @"exec insertFileProjectAssociations '" + pb.Id + "','" + pb.IdProyecto + "','" + pb.IdTipoEntregable + "'";
-        }
-
-        public string execUpdateArchivos(FileMetaData pb)
-        {
-            return @"exec updatebundle '" + pb.Id +
-                "','" + pb.DescriptorEs +
-                "','" + pb.DescriptorEn +
-                "','" + pb.Oemsku +
-                "','" + pb.DescriptorExtra +
-                "','" + pb.IdExtension +
-                "','" + pb.IdTipoEntregable +
-                "','" + pb.IdProyecto + "'";
-        }
 
         public string execGetNombreEntregableDesdeId(string id)
         {

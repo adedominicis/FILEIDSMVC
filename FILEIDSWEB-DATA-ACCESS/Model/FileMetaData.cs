@@ -22,15 +22,10 @@ namespace FILEIDSWEB_DATA_ACCESS.Model
         private string descriptorEs;
         private string descriptorExtra;
 
-        //id campos combobox
-        private int idExtension;
-        private int idTipoEntregable;
-        private int idProyecto;
-
-
-        // Valores campos combobox (desde BD)
-
         private string extension;
+        private string nombreArchivo;
+        private int idExtension;
+        private int idProyecto;
 
         public string Id
         {
@@ -66,11 +61,7 @@ namespace FILEIDSWEB_DATA_ACCESS.Model
 
         //Id's y valores comboboxes
 
-        public int IdTipoEntregable
-        {
-            get { return idTipoEntregable; }
-            set { idTipoEntregable = value; }
-        }
+
         public int IdExtension
         {
             get
@@ -97,13 +88,19 @@ namespace FILEIDSWEB_DATA_ACCESS.Model
         {
             get { return extension; }
             set { extension = value; }
+
         }
 
-        public string getNombreEntregable()
-        {
-            return getFormattedID();
+        public string NombreArchivo {
+            get { return nombreArchivo; }
+            set { nombreArchivo = value; }
         }
-        public string getNombreArchivo()
+
+        /// <summary>
+        /// Revisar 
+        /// </summary>
+        /// <returns></returns>
+        public string getNombreArchivoFormateado()
         {
             string nombre = getFormattedID() + " - " + descriptorEs;
             return nombre;

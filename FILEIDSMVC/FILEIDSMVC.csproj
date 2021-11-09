@@ -439,7 +439,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
-    <Content Include="Views\Home\RegistrarArchivo.cshtml" />
+    <Content Include="Views\Proyectos\RegistrarArchivo.cshtml" />
     <Content Include="Views\Home\ViewFile.cshtml" />
     <Content Include="Views\Shared\CrearProyecto.cshtml" />
     <Content Include="Views\Proyectos\Proyectos.cshtml" />
@@ -455,7 +455,6 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\DesignReview\Index.cshtml" />
     <Content Include="Views\Proyectos\CrearProyecto.cshtml" />
-    <Content Include="Views\Proyectos\DetallesProyecto.cshtml" />
     <Content Include="Views\Sweet\Alert.cshtml" />
   </ItemGroup>
   <ItemGroup>

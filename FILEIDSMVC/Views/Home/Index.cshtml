@@ -7,7 +7,27 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <h1>PANTALLA PRINCIPAL CON BALDOSAS/TILES</h1>
+    <main class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="bg-light p-5 rounded">
+                    <h1>Control de versiones</h1>
+                    <p class="lead">FILEIDS te permite almacenar y controlar versiones de archivos miscelaneos.</p>
+                    <a class="btn btn-lg btn-primary" href="#" role="button">Conocer más »</a>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bg-light p-5 rounded">
+                    <h1>Design Review</h1>
+                    <p class="lead">
+                        La funcionalidad de design review permite el marcado y comentado de archivos en
+                        cualquiera de sus versiones para facilitar la comunicación entre pares
+                    </p>
+                    <a class="btn btn-lg btn-primary" href="#" role="button">Conocer más»</a>
+                </div>
+            </div>
+        </div>
+    </main>
 }
 else
 {

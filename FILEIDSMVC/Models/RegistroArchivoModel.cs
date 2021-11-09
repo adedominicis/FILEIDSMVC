@@ -12,51 +12,56 @@ namespace FILEIDSMVC.Models
     public class RegistroArchivoModel
     {
        
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="listaProyectos">Lista de tuplas (String: Value, String: Text) 
-        /// que es convertible a SelectList para llenar comboboxes</param>
-        public RegistroArchivoModel(List<(string Value, string Text)> listaProyectos)
-        {
-            proyectos = new List<SelectListItem>();
-            //Llenar el listado de proyectos y en general cualquier otro combobox que derive de este model
-            proyectos.Clear();
-            foreach (var item in listaProyectos)
-            {
-                proyectos.Add(new SelectListItem { Text = item.Text, Value = item.Value });
-            }
-        }
-
         public RegistroArchivoModel()
         {
 
         }
 
         #region Campos privados
-        private List<SelectListItem> proyectos;
 
         #endregion
 
         #region Propiedades públicas
+
+        /// <summary>
+        /// Id del proyecto en el que se carga el archivo
+        /// </summary>
+        public int IdProyecto { get; set; }
+
+        /// <summary>
+        /// Nombre del proyecto.
+        /// </summary>
+        public string NombreProyecto { get; set; }
+
+        /// <summary>
+        /// Nombre del archivo.
+        /// Se ha modificado la logica general de FILEIDS para que el nombre del archivo no sea la descripción en español
+        /// En función de eso, este campo representa el nombre que será reemplazado en el archivo subido.
+        /// </summary>
+        [Display(Name = "Nombre del archivo")]
+        [MaxLength(50, ErrorMessage = "El nombre del archivo no debe exceder 50 caracteres")]
+        public string NombreArchivo { get; set; }
+
         /// <summary>
         /// Descriptor en español
         /// </summary>
-        [MaxLength(100), MinLength(4)]
-        [Required(ErrorMessage = "Se requiere una descripción entre 4 y 100 caracteres")]
+        [MaxLength(500,ErrorMessage ="La descripción no debe exceder 500 caracteres"), 
+            MinLength(2, ErrorMessage = "La descripción no debe ser menor a 2 caracteres")]
+        [Required(ErrorMessage = "Se requiere una descripción")]
         [Display(Name = "Descripción")]
         public string DescriptorEs { get; set; }
 
         /// <summary>
         /// Descriptor en ingles
         /// </summary>
-        [Required(ErrorMessage = "Se requiere una descripción entre 4 y 100 caracteres")]
+        [MaxLength(500, ErrorMessage = "Description should not exceed 500 characters long")]
         [Display(Name = "Description")]
         public string DescriptorEn { get; set; }
-        
+
         /// <summary>
         /// Descriptor adicional o comentarios
         /// </summary>
+        [MaxLength(500, ErrorMessage = "Los comentarios no deben exceder 500 caracteres")]
         [Display(Name = "Comentarios")]
         public string DescriptorExtra { get; set; }
 
@@ -70,23 +75,12 @@ namespace FILEIDSMVC.Models
         /// Listado de proyectos existentes en el sistema.
         /// </summary>
 
-        [Display(Name = "Proyecto asociado")]
-        public List<SelectListItem> Proyectos
-        {
-            get { return proyectos; }
-        }
-        #endregion
-
-        /// <summary>
-        /// Id del proyecto seleccionado en el droplist
-        /// </summary>
-        public string IdProyecto { get; set; }
 
         /// <summary>
         /// Ruta del archivo
         /// </summary>
         [Display(Name = "Cargar Archivo")]
-        public string NombreArchivo { get; set; }
+        public string NombreArchivoSubido { get; set; }
 
         /// <summary>
         /// Extensión del archivo
@@ -96,6 +90,8 @@ namespace FILEIDSMVC.Models
         /// <summary>
         /// Archivo subido
         /// </summary>
-        public HttpPostedFileBase Archivo { get; set; }
+        public HttpPostedFileBase ArchivoSubido { get; set; }
+
+        #endregion
     }
 }

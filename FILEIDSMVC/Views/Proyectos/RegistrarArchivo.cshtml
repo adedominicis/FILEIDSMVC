@@ -1,0 +1,158 @@
+﻿@model FILEIDSMVC.Models.RegistroArchivoModel
+
+@{
+    ViewBag.Title = "Registrar nuevo archivo";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    @*using (Html.BeginForm("RegistrarArchivo", "Proyectos", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h3>Registrar nuevo archivo</h3>
+                <h4 class="text-danger">@ViewBag.ErrorMessages</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DescriptorEs, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DescriptorEs, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DescriptorEs, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DescriptorEn, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DescriptorEn, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DescriptorEn, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DescriptorExtra, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DescriptorExtra, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DescriptorExtra, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OemSku, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.OemSku, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.OemSku, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Proyectos, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.IdProyecto, (List<SelectListItem>)Model.Proyectos, htmlAttributes: new { @class = "btn btn-secondary dropdown-toggle" })
+                        @Html.ValidationMessageFor(model => model.Proyectos, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        @Html.LabelFor(model => model.Archivo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
+                    <div>
+                        <input type="file" class="custom-file-input col-md-10" name="Archivo" required>
+
+                    </div>
+
+                </div>
+
+                <script>
+                    // Para mostrar nombre del archivo al cargar.
+                    $(".custom-file-input").on("change", function () {
+                        var fileName = $(this).val().split("\\").pop();
+                        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                    });
+                </script>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Registrar archivo" class="btn btn-primary" required />
+                    </div>
+                </div>
+            </div>
+
+
+        }*@
+
+    using (Html.BeginForm("RegistrarArchivo", "Proyectos", FormMethod.Post, new { @class = "container", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <section class="bg-light pb-5 pt-5">
+            <div class="container pb-5 pt-5">
+                <div class="bg-white p-4 p-lg-5">
+                    <h2 class="mb-4">Nuevo archivo en: @Model.NombreProyecto</h2>
+                    <form>
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label class="form-label" for="NombreArchivo">Nombre</label>
+                                @Html.EditorFor(model => model.NombreArchivo, new { htmlAttributes = new { @class = "form-control rounded-0", placeholder = "Nombre del archivo" } })
+                                @Html.ValidationMessageFor(model => model.NombreArchivo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mb-3 col-6">
+                                <label class="form-label" for="OemSku">N° de parte OEM/SKU</label>
+                                @Html.EditorFor(model => model.OemSku, new { htmlAttributes = new { @class = "form-control rounded-0", placeholder = "Numero de parte OEM" } })
+                                @Html.ValidationMessageFor(model => model.OemSku, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label" for="DescriptorEs">Descripción</label>
+                                @Html.EditorFor(model => model.DescriptorEs, new { htmlAttributes = new { @class = "form-control rounded-0", placeholder = "Descripción" } })
+                                @Html.ValidationMessageFor(model => model.DescriptorEs, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label" for="DescriptorEn">Description</label>
+                                @Html.EditorFor(model => model.DescriptorEn, new { htmlAttributes = new { @class = "form-control rounded-0", placeholder = "Description" } })
+                                @Html.ValidationMessageFor(model => model.DescriptorEn, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label" for="DescriptorExtra">Comentarios</label>
+                                @Html.EditorFor(model => model.DescriptorExtra, new { htmlAttributes = new { @class = "form-control rounded-0", placeholder = "Description" } })
+                                @Html.ValidationMessageFor(model => model.DescriptorExtra, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Cargar archivo</label>
+                            <input class="form-control" type="file" id="ArchivoSubido" name="ArchivoSubido">
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary ps-4 pe-4 rounded-0 rounded-pill text-uppercase">
+                                Cargar&nbsp;
+                                <svg viewBox="0 0 24 24" fill="currentColor" height="16" width="16" class="ms-1">
+                                    <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    }
+
+
+    <footer>
+        <div>
+            @Html.ActionLink("Volver", "Index")
+        </div>
+    </footer>
+
+}
+else
+{
+    Context.Response.Redirect("/Account/Login");
+}
