@@ -50,6 +50,7 @@
 
                                     <div class="row">
                                         <div class="col">
+                                            @Html.ActionLink("Ver archivos", "ListarArchivos", "Proyectos", new { IdDirectorio = item.IdDirectorio, NombreDirectorio = item.NombreDirectorio }, new { @class="btn btn-outline-info"})
                                             <button type="button" class="btn btn-outline-info">Ver archivos</button>
                                         </div>
                                         <div class="col">

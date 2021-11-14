@@ -52,7 +52,7 @@
     <Compile Include="Logging\Enumeraciones.cs" />
     <Compile Include="Logging\ErrorHandler.cs" />
     <Compile Include="Model\Extensiones.cs" />
-    <Compile Include="Model\FileMetaData.cs" />
+    <Compile Include="Model\Archivo.cs" />
     <Compile Include="Model\Proyecto.cs" />
     <Compile Include="Model\Ruta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -39,9 +39,6 @@ namespace FILEIDSMVC.Controllers
             ViewBag.Title = "Crear un nuevo proyecto";
             return View();
         }
-
-
-
         /// <summary>
         /// Eliminar proyecto.
         /// </summary>
@@ -77,9 +74,9 @@ namespace FILEIDSMVC.Controllers
         {
             
             //Model para pasar a la vista.
-            RegistroArchivoModel regArchivo = new RegistroArchivoModel();
-            regArchivo.NombreProyecto = proyecto.NombreDirectorio;
-            regArchivo.IdProyecto = proyecto.IdDirectorio;
+            ArchivoViewModel regArchivo = new ArchivoViewModel();
+            regArchivo.NombreDirectorio = proyecto.NombreDirectorio;
+            regArchivo.IdCarpetaPadre = proyecto.IdDirectorio;
             return View(regArchivo);
         }
 
@@ -89,7 +86,7 @@ namespace FILEIDSMVC.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult RegistrarArchivo(RegistroArchivoModel model)
+        public ActionResult RegistrarArchivo(ArchivoViewModel model)
         {
             ViewBag.ErrorMessages = "";
             try
@@ -105,18 +102,23 @@ namespace FILEIDSMVC.Controllers
                         ViewBag.ErrorMessages = "Error al registrar o guardar el archivo";
                     }
                 }
-                return View(new RegistroArchivoModel());
+                return View(new ArchivoViewModel());
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessages = ex.Message;
-                return View(new RegistroArchivoModel());
+                return View(new ArchivoViewModel());
             }
 
         }
 
+        public ActionResult ListarArchivos(ArchivoViewModel model)
+        {
+
+        }
+
         #region Helpers
-        private bool registerAndTransfer(RegistroArchivoModel model)
+        private bool registerAndTransfer(ArchivoViewModel model)
         {
             //Si el archivo tiene algo
             if (model.ArchivoSubido.ContentLength > 0)
@@ -133,13 +135,13 @@ namespace FILEIDSMVC.Controllers
 
                 //Clases de manipulacion de archivos.
                 FileManager fm = new FileManager();
-                FileMetaData fData = new FileMetaData();
-                //FileMetaData y RegistroArchivoModel deberían venir de la misma interfaz o heredar de un comun.
+                Archivo fData = new Archivo();
+                //Archivo y ArchivoViewModel deberían venir de la misma interfaz o heredar de un comun.
                 fData.NombreArchivo = model.NombreArchivo;
                 fData.DescriptorEn = model.DescriptorEn;
                 fData.DescriptorEs = model.DescriptorEs;
                 fData.Oemsku = model.OemSku;
-                fData.IdProyecto = Convert.ToInt32(model.IdProyecto);
+                fData.IdProyecto = Convert.ToInt32(model.IdCarpetaPadre);
                 fData.DescriptorExtra = model.DescriptorExtra;
                 fData.Extension = Path.GetExtension(model.ArchivoSubido.FileName);
                 //Si la extensión no tiene un ID, quiza sea razonable que se agregue sola, como en Hormesa FILEIDS

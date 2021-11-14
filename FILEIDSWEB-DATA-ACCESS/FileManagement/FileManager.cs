@@ -68,7 +68,7 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
 
         // Administrador de archivos.
 
-        public bool guardarArchivo(FileMetaData fData, HttpPostedFileBase file)
+        public bool guardarArchivo(Archivo fData, HttpPostedFileBase file)
         {
             // Guardar archivo en el directorio local con el nombre que le corresponde
             //Construir objeto ruta.

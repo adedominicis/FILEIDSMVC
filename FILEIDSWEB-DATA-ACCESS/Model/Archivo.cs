@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace FILEIDSWEB_DATA_ACCESS.Model
 {
-    public class FileMetaData
+    public class Archivo
 
     // Bundle de propiedades personalizadas
     {
 
-        public FileMetaData()
+        public Archivo()
         {
         }
 
-        // Variables de campos de texto en el formulario
+        //Metadatos
         private string id;
         private string oemsku;
         private string descriptorEn;

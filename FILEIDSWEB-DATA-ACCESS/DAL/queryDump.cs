@@ -91,7 +91,7 @@ namespace FILEIDSWEB_DATA_ACCESS
             return @"exec getFileProjectAssociationFromId '" + id + "'";
         }
 
-        public string execInsertFileProperties(FileMetaData pb)
+        public string execInsertFileProperties(Archivo pb)
         {
             return @"exec InsertFileProperties '" +
                 pb.DescriptorEs + "','" +

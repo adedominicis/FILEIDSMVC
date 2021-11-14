@@ -7,12 +7,12 @@ using System.Web.Mvc;
 namespace FILEIDSMVC.Models
 {
     /// <summary>
-    /// Model para vista de registro de archivos
+    /// ViewModel para archivos.
     /// </summary>
-    public class RegistroArchivoModel
+    public class ArchivoViewModel
     {
        
-        public RegistroArchivoModel()
+        public ArchivoViewModel()
         {
 
         }
@@ -21,27 +21,55 @@ namespace FILEIDSMVC.Models
 
         #endregion
 
-        #region Propiedades públicas
+        #region Propiedades públicas - Archivos
 
         /// <summary>
-        /// Id del proyecto en el que se carga el archivo
+        /// Identificador unico del archivo.
+        /// id_archivo en la tabla ARCHIVOS.
         /// </summary>
-        public int IdProyecto { get; set; }
-
-        /// <summary>
-        /// Nombre del proyecto.
-        /// </summary>
-        public string NombreProyecto { get; set; }
+        public int IdArchivo { get; set; }
 
         /// <summary>
         /// Nombre del archivo.
-        /// Se ha modificado la logica general de FILEIDS para que el nombre del archivo no sea la descripción en español
-        /// En función de eso, este campo representa el nombre que será reemplazado en el archivo subido.
+        /// nombre_archivo en la tabla ARCHIVOS
         /// </summary>
         [Display(Name = "Nombre del archivo")]
         [MaxLength(50, ErrorMessage = "El nombre del archivo no debe exceder 50 caracteres")]
         public string NombreArchivo { get; set; }
 
+
+        /// <summary>
+        /// id_carpeta_padre en tabla ARCHIVOS
+        /// Id de la carpeta en la que se encuentra el archivo.
+        /// </summary>
+        public int IdCarpetaPadre { get; set; }
+
+        /// <summary>
+        /// True para archivos activos, false para archivos eliminados.
+        /// </summary>
+        public bool EsActivo { get; set; }
+
+        #endregion
+
+
+        #region Propiedades públicas - Directorios
+        
+        /// <summary>
+        /// Nombre del proyecto.
+        /// nombre_directorio en tabla directorios
+        /// </summary>
+        public string NombreDirectorio { get; set; }
+
+        /// <summary>
+        /// descriptor_directorio en tabla directorios
+        /// Descriptor del directorio
+        /// </summary>
+        public string DescriptorDirectorio { get; set; }
+
+        
+        #endregion
+
+        #region Propiedades públicas - Metadata
         /// <summary>
         /// Descriptor en español
         /// </summary>
@@ -71,10 +99,6 @@ namespace FILEIDSMVC.Models
         [Display(Name = "N° de parte OEM")]
         public string OemSku { get; set; }
 
-        /// <summary>
-        /// Listado de proyectos existentes en el sistema.
-        /// </summary>
-
 
         /// <summary>
         /// Ruta del archivo
@@ -92,6 +116,6 @@ namespace FILEIDSMVC.Models
         /// </summary>
         public HttpPostedFileBase ArchivoSubido { get; set; }
 
-        #endregion
+        
     }
 }

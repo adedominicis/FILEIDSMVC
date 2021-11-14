@@ -98,4 +98,39 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[descriptor_directorio]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="8b48b3cf-85fa-4ffd-b3d1-e7125a00a1fe" ChangeDateTime="11/13/2021 18:02:58">
+    <Property Name="ElementName" Value="[dbo].[archivos].[id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[archivos]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="id_archivo" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="01567f5b-44f5-49de-943c-1ce0c226ffd2" ChangeDateTime="11/13/2021 19:10:28">
+    <Property Name="ElementName" Value="[dbo].[revisionlevels].[id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[revisionlevels]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ID_REVISIONLEVEL" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0c49b828-f6b0-467f-a4e7-443a6552c4c7" ChangeDateTime="11/13/2021 19:10:37">
+    <Property Name="ElementName" Value="[dbo].[revisionlevels].[caracter]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[revisionlevels]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CHAR_REVISIONLEVEL" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="aa12f26b-2030-40f7-b5f1-eb540ea79d79" ChangeDateTime="11/13/2021 19:27:40">
+    <Property Name="ElementName" Value="[dbo].[almacenamiento].[ID_VERSION]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[almacenamiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VERSION" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fd48e633-34d3-48d6-b79c-b9daf075f0fe" ChangeDateTime="11/13/2021 19:33:16">
+    <Property Name="ElementName" Value="[dbo].[almacenamiento].[VERSION]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[almacenamiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VERSION_ARCHIVO" />
+  </Operation>
 </Operations>

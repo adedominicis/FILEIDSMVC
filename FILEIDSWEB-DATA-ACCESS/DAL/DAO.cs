@@ -95,8 +95,8 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
         }
 
-        // Obtener un objeto FileMetaData a partir de uno existente, refrescando desde la DB
-        //public FileMetaData getFileMetaDataFromDB(FileMetaData fileMd)
+        // Obtener un objeto Archivo a partir de uno existente, refrescando desde la DB
+        //public Archivo getFileMetaDataFromDB(Archivo fileMd)
         //{
         //    try
         //    {
@@ -168,8 +168,8 @@ namespace FILEIDSWEB_DATA_ACCESS
 
         //}
 
-        // Agregar un nuevo registro en la DB desde un FileMetaData
-        public FileMetaData addRecord(FileMetaData fileMd)
+        // Agregar un nuevo registro en la DB desde un Archivo
+        public Archivo addRecord(Archivo fileMd)
         {
 
             try
@@ -204,8 +204,8 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
         }
 
-        // Actualizar un campo de la base de datos desde un FileMetaData
-        //public bool updateRecord(FileMetaData pb)
+        // Actualizar un campo de la base de datos desde un Archivo
+        //public bool updateRecord(Archivo pb)
         //{
         //    int rowsAffected = 0;
 
