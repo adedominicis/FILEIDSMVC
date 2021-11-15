@@ -31,9 +31,9 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// </summary>
         /// <param name="proyecto"></param>
         /// <returns></returns>
-        public string CrearDirectorioRaiz(Proyecto proyecto)
+        public string CrearDirectorioRaiz(Directorio proyecto)
         {
-            return string.Format("exec CrearDirectorioRaiz '{0}','{1}'",proyecto.NombreDirectorio,proyecto.DescriptorDirectorio );
+            return string.Format("exec CrearDirectorioRaiz '{0}','{1}'", proyecto.NombreDirectorio, proyecto.DescriptorDirectorio);
         }
 
         /// <summary>
@@ -54,86 +54,32 @@ namespace FILEIDSWEB_DATA_ACCESS
         {
             return string.Format("exec DesactivarDirectorioRaiz {0}", idDirectorio);
         }
+
+        /// <summary>
+        /// Crear nuevo archivo en la DB y el storage
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns>
+        public string CrearArchivo(Almacenamiento alm)
+        {
+            return string.Format("exec CrearArchivo '{0}',{1},'{2}','{3}'",
+                alm.Archivo.NombreArchivo,
+                alm.Archivo.IdDirectorioPadre,
+                alm.Extension,
+                alm.RutaAlmacenamiento);
+        }
+
+        /// <summary>
+        /// Desarrollar recursivamente todas las carpetas y subcarpetas de un directorio particular
+        /// </summary>
+        /// <param name="idDirectorio"></param>
+        /// <returns></returns>
+        public string DesarrollarDirectorioRecursivo(int idDirectorio)
+        {
+            return string.Format("exec DesarrollarDirectorioRecursivo {0}", idDirectorio);
+        }
         #endregion
 
-        #region Legacy y no revisados
-        public string execProyectoDesdeId(string id)
-        {
-            return @"exec getNombreProyecto '" + id + "'";
-        }
-
-
-
-        public string execNombreArchivoDesdeId(string id)
-        {
-            return @"exec getNombreArchivo '" + id + "'";
-        }
-        public string execNombreEntregableDesdeId(string id)
-        {
-            return @"exec getNombreEntregable '" + id + "'";
-        }
-
-
-
-        public string execGetBundleDesdeId(string id)
-        {
-            //En desuso, revisar.
-            return @"exec getbundle '" + id + "'";
-        }
-
-        public string execGetFilePropertiesFromId(string id)
-        {
-            return @"exec getFilePropertiesFromId '" + id + "'";
-        }
-
-        public string execGetFileProjectAssociationFromId(string id)
-        {
-            return @"exec getFileProjectAssociationFromId '" + id + "'";
-        }
-
-        public string execInsertFileProperties(Archivo pb)
-        {
-            return @"exec InsertFileProperties '" +
-                pb.DescriptorEs + "','" +
-                pb.DescriptorEn + "','" +
-                pb.Oemsku + "'," +
-                pb.IdExtension + ",'" +
-                pb.DescriptorExtra + "'";
-        }
-
-
-        public string execGetNombreEntregableDesdeId(string id)
-        {
-            return @"exec getNombreEntregable '" + id + "'";
-        }
-
-        public string execCargarRuta(Ruta ruta)
-        {
-            return @"exec cargarRuta '" + ruta.IdArchivo + "','" + ruta.StrRuta + "','" + ruta.RevLevel + "','" + ruta.MD5 + "'";
-        }
-
-        public string execGetRevisionLevelFromId(string id)
-        {
-            return @"exec GetRevisionLevelFromId '" + id + "'";
-        }
-
-        internal string execBorrarRuta(Ruta ruta)
-        {
-            return @"exec borrarRuta '" + ruta.IdArchivo + "','" + ruta.RevLevel + "'";
-        }
-
-        public string execGetRutaDesdeId(Ruta ruta)
-        {
-            return @"exec obtenerRutaDesdeId '" + ruta.IdArchivo + "','" + ruta.RevLevel + "'";
-        }
-
-        public string execGetArchivosLocalesLike(string keywords)
-        {
-            return @"exec buscarArchivosLocalesLike '" + keywords + "'";
-        }
-
-
-        #endregion
 
         #region Queries convencionales por cambiar a procedimiento almacenado
 
@@ -166,6 +112,13 @@ namespace FILEIDSWEB_DATA_ACCESS
         {
             return @"exec execLogExceptions '" + message + "'";
         }
+
+        internal string ListarArchivosSubDirectorio(object idDirectorio)
+        {
+            return string.Format("exec ListarArchivosSubDirectorio {0}", idDirectorio);
+        }
+
+
 
 
 

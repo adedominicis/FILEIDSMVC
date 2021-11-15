@@ -16,15 +16,9 @@ namespace FILEIDSMVC.Controllers
     public class HomeController : Controller
     {
         //Acceso a datos.
-        DAO dao = new DAO();
-        queryDump q = new queryDump();
         public ActionResult Index()
         {
-            List<ProyectosModel> listDirs = new List<ProyectosModel>();
-            listDirs.Add(new ProyectosModel() { DescriptorDirectorio = "Un directorio", DirectorioActivo = true, NombreDirectorio = "Test" });
-            listDirs.Add(new ProyectosModel() { DescriptorDirectorio = "Otro directorio", DirectorioActivo = true, NombreDirectorio = "Otro" });
-
-            return View(listDirs);
+            return View();
         }
 
 

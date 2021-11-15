@@ -7,113 +7,19 @@ using System.Threading.Tasks;
 namespace FILEIDSWEB_DATA_ACCESS.Model
 {
     public class Archivo
-
-    // Bundle de propiedades personalizadas
     {
 
-        public Archivo()
-        {
-        }
+		public int IdArchivo { get; set; }
+		public string NombreArchivo { get; set; }
+		public int IdRevisionLevel { get; set; }
+		public int IdDirectorioPadre { get; set; }
+		public bool EsActivo { get; set; }
 
-        //Metadatos
-        private string id;
-        private string oemsku;
-        private string descriptorEn;
-        private string descriptorEs;
-        private string descriptorExtra;
+		public string Revision { get; set; }
 
-        private string extension;
-        private string nombreArchivo;
-        private int idExtension;
-        private int idProyecto;
-
-        public string Id
-        {
-            get { return id; }
-            set
-            {
-                id = value;
-            }
-        }
-
-        public string Oemsku
-        {
-            get { return oemsku; }
-            set
-            { oemsku = value; }
-        }
-        public string DescriptorEn
-        {
-            get { return descriptorEn; }
-            set
-            { descriptorEn = value; }
-        }
-        public string DescriptorEs
-        {
-            get { return descriptorEs; }
-            set { descriptorEs = value; }
-        }
-        public string DescriptorExtra
-        {
-            get { return descriptorExtra; }
-            set { descriptorExtra = value; }
-        }
-
-        //Id's y valores comboboxes
-
-
-        public int IdExtension
-        {
-            get
-            {
-                return idExtension;
-            }
-            set
-            {
-                idExtension = value;
-            }
-        }
-        public int IdProyecto
-        {
-            get
-            {
-                return idProyecto;
-            }
-            set
-            {
-                idProyecto = value;
-            }
-        }
-        public string Extension
-        {
-            get { return extension; }
-            set { extension = value; }
-
-        }
-
-        public string NombreArchivo {
-            get { return nombreArchivo; }
-            set { nombreArchivo = value; }
-        }
-
-        /// <summary>
-        /// Revisar 
-        /// </summary>
-        /// <returns></returns>
-        public string getNombreArchivoFormateado()
-        {
-            string nombre = getFormattedID() + " - " + descriptorEs;
-            return nombre;
-        }
-        public string getFormattedID()
-        {
-            if (id != null)
-            {
-                return id.PadLeft(6, '0').Insert(3, "-");
-            }
-            return string.Empty;
-
-
-        }
-    }
+		/// <summary>
+		/// Objeto directorio padre completo.
+		/// </summary>
+		public Directorio DirectorioPadre { get; set; }
+	}
 }

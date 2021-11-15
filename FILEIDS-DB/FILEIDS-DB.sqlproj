@@ -93,6 +93,7 @@
     <Build Include="dbo\Stored Procedures\EliminarArchivo.sql" />
     <Build Include="dbo\Stored Procedures\GetMetadata.sql" />
     <Build Include="dbo\Stored Procedures\TESTS_ResetearTodo.sql" />
+    <Build Include="dbo\Stored Procedures\ListarArchivosSubDirectorio.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="FILEIDS-DB.refactorlog" />

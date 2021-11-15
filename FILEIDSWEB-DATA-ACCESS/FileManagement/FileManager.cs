@@ -17,7 +17,7 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         // Directorios principales de sistema de archivos.
         #region private fields
 
-        Ruta direccion = new Ruta();
+        Archivo direccion = new Archivo();
         DAO dao = new DAO();
         queryDump q = new queryDump();
         private string oemPath;
@@ -68,42 +68,32 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
 
         // Administrador de archivos.
 
-        public bool guardarArchivo(Archivo fData, HttpPostedFileBase file)
+        public bool CrearArchivo(Almacenamiento alm)
         {
-            // Guardar archivo en el directorio local con el nombre que le corresponde
-            //Construir objeto ruta.
-            rootDir = ConfigurationManager.AppSettings["FileCachePath"].ToString();
-            Ruta ruta = new Ruta();
-            ruta.IdArchivo = fData.Id;
-            ruta.RevLevel = "1"; // Reemplazar por versioncontrol
-            ruta.RevLetter = dao.singleReturnQuery(q.execGetRevisionLevelFromId(ruta.RevLevel));
-            ruta.MD5 = "NONE"; // Funcionalidad MD5 viene mas adelante para control de cambios.
+            //Setear ruta de almacenamiento.
+            alm.RutaAlmacenamiento=ConfigurationManager.AppSettings["FileCachePath"].ToString();
 
             try
             {
-                // Construido el objeto Ruta, recibir el archivo
-
                 //Si no existe el directorio raiz, crearlo.
                 if (!Directory.Exists(rootDir))
                 {
                     Directory.CreateDirectory(rootDir);
                 }
 
+                //Guardar archivo físico
+                alm.ArchivoFisico.SaveAs(alm.getLocalStoragePath());
                 // Path completo del archivo a guardar.
-                ruta.StrRuta = string.Format(@"{0}{1}-{2}{3}", rootDir, fData.getNombreArchivoFormateado(), ruta.RevLetter, Path.GetExtension(file.FileName));
-                
-                //Guardar archivo. Es necesario añadir una verificacion
-                file.SaveAs(ruta.StrRuta);
-                //Registrar archivo en la base de datos.
-                if (File.Exists(ruta.StrRuta))
+
+                if (File.Exists(alm.getLocalStoragePath()))
                 {
                     //El archivo fue guardado efectivamente y puede registrarse en la db
-                    return registrarRuta(ruta);
+                    return dao.genericSelectQuery(q.CrearArchivo(alm)) != null;
                 }
                 else
                 {
                     //El archivo no pudo registrarse en la db. Borrar fisico.
-                    File.Delete(ruta.StrRuta);
+                    File.Delete(alm.getLocalStoragePath());
                     return false;
                 }
             }
@@ -114,29 +104,24 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
             
 
         }
-        private bool registrarRuta(Ruta ruta)
-        {
-            // Registrar en la base de datos que el archivo fue guardado en la ruta correspondiente.
-            return dao.genericSelectQuery(q.execCargarRuta(ruta)) != null;
-        }
 
-        public bool eliminarArchivo(Ruta ruta)
-        {
-            if (dao.genericDeleteQuery(q.execBorrarRuta(ruta)))
-            {
-                if (File.Exists(ruta.StrRuta))
-                {
-                    File.Delete(ruta.StrRuta);
-                }
+        //public bool eliminarArchivo(Archivo ruta)
+        //{
+        //    if (dao.genericDeleteQuery(q.execBorrarRuta(ruta)))
+        //    {
+        //        if (File.Exists(ruta.StrRuta))
+        //        {
+        //            File.Delete(ruta.StrRuta);
+        //        }
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
 
-        }
+        //}
 
         public string verArchivo(string rutaRelativa)
         {

@@ -56,6 +56,7 @@ namespace FILEIDSWEB_DATA_ACCESS
         }
 
 
+
         // Get connection name
         public string getConnectionName()
         {
@@ -95,161 +96,14 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
         }
 
-        // Obtener un objeto Archivo a partir de uno existente, refrescando desde la DB
-        //public Archivo getFileMetaDataFromDB(Archivo fileMd)
-        //{
-        //    try
-        //    {
 
-        //        //Consulta
-        //        string query = q.execGetFilePropertiesFromId(fileMd.Id);
-        //        //Conectarse
-        //        startConnection();
 
-        //        //Dataset
-        //        DataSet ds = new DataSet();
-        //        //Data adapter
-        //        SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
-        //        //Llenar dataset con el resultado de dataAdapter
-        //        dataAdapter.Fill(ds, "properties");
-        //        DataTable tbl = ds.Tables["properties"];
-        //        // Datos de tabla ARCHIVOS y EXTENSIONES
-        //        if (tbl.Rows.Count > 0)
-        //        {
-        //            foreach (DataRow row in tbl.Rows)
-        //            {
-        //                fileMd.DescriptorEs = row[0].ToString();
-        //                fileMd.DescriptorEn = row[1].ToString();
-        //                fileMd.Oemsku = row[2].ToString();
-        //                fileMd.DescriptorExtra = row[3].ToString();
-        //                fileMd.IdExtension = int.Parse(row[5].ToString());
-        //            }
-        //        }
-        //        else
-        //        {
-        //            fileMd.DescriptorEs = "No encontrado";
-        //            fileMd.DescriptorEn = "Not found";
-        //            fileMd.Oemsku = "";
-        //            fileMd.DescriptorExtra = "";
-        //            fileMd.IdExtension = -1;
-        //        }
-
-        //        // Datos de tablas entregables y proyectos
-        //        query = q.execGetFileProjectAssociationFromId(fileMd.Id);
-        //        dataAdapter = new SqlDataAdapter(query, connection);
-        //        dataAdapter.Fill(ds, "proyectos");
-        //        tbl = ds.Tables["proyectos"];
-
-        //        if (tbl.Rows.Count > 0)
-        //        {
-        //            foreach (DataRow row in tbl.Rows)
-        //            {
-        //                //pb.Proyecto= row[0].ToString();
-        //                fileMd.IdTipoEntregable = int.Parse(row[3].ToString());
-        //                fileMd.IdProyecto = int.Parse(row[4].ToString());
-        //            }
-        //        }
-        //        else
-        //        {
-        //            fileMd.IdTipoEntregable = 0;
-        //            fileMd.IdProyecto = 0;
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.getFileMetaDataFromDB");
-        //    }
-        //    finally
-        //    {
-        //        connection.Close();
-        //    }
-        //    return fileMd;
-
-        //}
-
-        // Agregar un nuevo registro en la DB desde un Archivo
-        public Archivo addRecord(Archivo fileMd)
-        {
-
-            try
-            {
-
-                // Consulta
-
-                string query = q.execInsertFileProperties(fileMd);
-
-                // Verificar estado de la conexion
-                startConnection();
-
-                SqlCommand command = new SqlCommand(query, connection);
-                //Ejecutar procedimiento para insertar en tabla Archivos y retornar ID
-                string registeredID = command.ExecuteScalar().ToString();
-                fileMd.Id = registeredID;
-
-                //Ejecutar procedimiento para insertar en tabla de proyectos. Esto va a ser deprecado
-                //query = q.execInsertFileProjectAssociations(fileMd);
-                //command = new SqlCommand(query, connection);
-                //command.ExecuteScalar();
-                return fileMd;
-            }
-            catch (Exception ex)
-            {
-                exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.addRecord");
-                return null;
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-
-        // Actualizar un campo de la base de datos desde un Archivo
-        //public bool updateRecord(Archivo pb)
-        //{
-        //    int rowsAffected = 0;
-
-        //    try
-        //    {
-        //        Consulta
-        //        string query = q.execUpdateArchivos(pb);
-        //        Verificar estado de la conexion
-        //        startConnection();
-
-        //        SqlCommand command = new SqlCommand(query, connection);
-
-        //        Ejecutar comando
-        //        rowsAffected = command.ExecuteNonQuery();
-        //        if (rowsAffected > 0)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        exceptionRaised?.Invoke(this, ErrorHandler.handler(EnumMensajes.errorSQL) + " " + conName + " " + ex.Message + "DAO.updateRecord");
-        //        return false;
-        //    }
-        //    finally
-        //    {
-        //        connection.Close();
-        //    }
-        //}
-
-        // Consulta generica "select" que retorna un solo string. 
         public string singleReturnQuery(string query)
         {
-
             try
             {
                 // Check for an available connection
                 startConnection();
-
-
                 //Todo esto parece estar mal. Deberia usarse sqlcommand.executescalar. Revisar.
                 //Dataset
                 DataSet ds = new DataSet();
@@ -303,6 +157,7 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
             return null;
         }
+
         // Este query retorna listas de strings listos para llenar comboboxes y similares. Debe reemplazar varios metodos redundantes mas abajo
         public ObservableCollection<string> observableCollectionQuery(string query)
         {
@@ -383,9 +238,9 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// </summary>
         /// <returns></returns>
 
-        public List<Proyecto> ListarDirectorioRaiz()
+        public List<Directorio> ListarDirectorioRaiz()
         {
-            List<Proyecto> lista = new List<Proyecto>();
+            List<Directorio> lista = new List<Directorio>();
             startConnection();
 
             DataTable res = genericSelectQuery(q.ListarDirectorioRaiz());
@@ -394,7 +249,7 @@ namespace FILEIDSWEB_DATA_ACCESS
             {
                 foreach (DataRow fila in res.Rows)
                 {
-                    lista.Add(new Proyecto() { 
+                    lista.Add(new Directorio() { 
                         IdDirectorio= Convert.ToInt32(fila[0]),
                         NombreDirectorio = fila[1].ToString(),
                         DescriptorDirectorio = fila[2].ToString(),
@@ -405,10 +260,78 @@ namespace FILEIDSWEB_DATA_ACCESS
             return lista;
         }
 
+        /// <summary>
+        /// Listar sub directoriosm de un directorio raiz
+        /// </summary>
+        /// <param name="idDirectorio"></param>
+        /// <returns></returns>
+        public List<Directorio> ListarSubDirectorios(int idDirectorio)
+        {
+            List<Directorio> lista = new List<Directorio>();
+
+            startConnection();
+
+            DataTable res = genericSelectQuery(q.DesarrollarDirectorioRecursivo(idDirectorio));
+            if (res.Rows.Count > 0)
+            {
+                foreach (DataRow fila in res.Rows)
+                {
+
+                    lista.Add(new Directorio()
+                    {
+                        IdDirectorio = Convert.ToInt32(fila[0]),
+                        IdDirectorioPadre = ConvertirNullCero(fila[2].ToString()),
+                        NombreDirectorio = fila[1].ToString(),
+                        Profundidad = Convert.ToInt32(fila[3].ToString())
+
+                    });
+
+                    
+                }
+            }
+            return lista;
+        }
+
+        /// <summary>
+        /// Listado de archivos de un subdirectorio
+        /// </summary>
+        /// <param name="idSubDirectorio"></param>
+        /// <returns></returns>
+        public List<Almacenamiento> ListarArchivosSubDirectorio(int idSubDirectorio)
+        {
+            List<Almacenamiento> lista = new List<Almacenamiento>();
+            Archivo arc;
+            startConnection();
+
+            DataTable res = genericSelectQuery(q.ListarArchivosSubDirectorio(idSubDirectorio));
+            if (res.Rows.Count > 0)
+            {
+                foreach (DataRow fila in res.Rows)
+                {
+
+                    arc = new Archivo()
+                    {
+                        IdArchivo = Convert.ToInt32(fila[1]),
+                        NombreArchivo= fila[2].ToString(),
+                        
+                    };
+
+                    lista.Add(new Almacenamiento()
+                    {
+
+                        Extension = fila[3].ToString(),
+                        Revision = fila[4].ToString(),
+                        VersionArchivo= Convert.ToInt32(fila[0]),
+                        Archivo = arc
+                    });  
+                }
+            }
+            return lista;
+        }
         #endregion
 
         #region Consultas Legacy
-        
+
 
         // Obtener todos los tipos de archivo para llenar combobox
         public List<Extensiones> getFileExtensions()
@@ -421,7 +344,7 @@ namespace FILEIDSWEB_DATA_ACCESS
             {
                 foreach (DataRow row in extensiones.Rows)
                 {
-                    listaTipos.Add(new Extensiones { Id = Convert.ToInt32(row[0]), Extension = row[1].ToString() });
+                    listaTipos.Add(new Extensiones { IdExtension = Convert.ToInt32(row[0]), Extension = row[1].ToString() });
                 }
 
             }
@@ -450,100 +373,6 @@ namespace FILEIDSWEB_DATA_ACCESS
             return lista;
         }
 
-        // Obtener proyectos disponibles para llenar combobox
-        //public ObservableCollection<string> getComboBoxData(string query)
-        //{
-        //    startConnection();
-        //    ObservableCollection<string> lista = new ObservableCollection<string>();
-        //    DataTable dataTable = genericSelectQuery(query);
-        //    if (dataTable != null)
-        //    {
-        //        foreach (DataRow row in dataTable.Rows)
-        //        {
-        //            lista.Add(row[0].ToString());
-        //        }
-        //    }
-        //    return lista;
-        //}
-
-        //Obtener el id de una extension de archivo particular.
-        public string getFileIdFromExtension(string extension)
-        {
-            startConnection();
-            DataTable res = genericSelectQuery(q.consultaIdFromExtension(extension));
-            return res.Rows[0][0].ToString();
-        }
-
-        //Obtener la extension de un archivo desde la id
-        public string getFileExtensionFromId(string id)
-        {
-            startConnection();
-            DataTable res = genericSelectQuery(q.consultaExtensionFromId(id));
-            return res.Rows[0][0].ToString();
-
-        }
-
-        //Obtener nombre del archivo desde id
-        public string getFileNameFromId(string id)
-        {
-            startConnection();
-            DataTable res = genericSelectQuery(q.execNombreArchivoDesdeId(id));
-            if (res.Rows.Count > 0)
-            {
-                return res.Rows[0][0].ToString();
-            }
-            else
-            {
-                return string.Empty;
-            }
-
-        }
-
-        //Obtener nombre del entregable desde id
-        public string getDeliverableNameFromId(string id)
-        {
-            startConnection();
-            DataTable res = genericSelectQuery(q.execNombreEntregableDesdeId(id));
-            if (res.Rows.Count > 0)
-            {
-                return res.Rows[0][0].ToString();
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        //Obtener nombre del proyecto desde id
-        public string getProjectNameFromId(string id)
-        {
-            startConnection();
-            DataTable res = genericSelectQuery(q.execProyectoDesdeId(id));
-            if (res.Rows.Count > 0)
-            {
-                return res.Rows[0][0].ToString();
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        public Ruta obtenerRutaDesdeId(string id, string revisionLevel)
-        {
-            Ruta ruta = new Ruta();
-            ruta.IdArchivo = id;
-            ruta.RevLevel = revisionLevel;
-            startConnection();
-
-            DataTable res = genericSelectQuery(q.execGetRutaDesdeId(ruta));
-            if (res.Rows.Count > 0)
-            {
-                ruta.StrRuta = res.Rows[0][1].ToString();
-                ruta.MD5 = res.Rows[0][3].ToString();
-            }
-            return ruta;
-        }
 
         public bool logException(string e)
         {
@@ -572,10 +401,22 @@ namespace FILEIDSWEB_DATA_ACCESS
             return false;
         }
 
+        #endregion
 
-        
+        #region Helpers
+        private int ConvertirNullCero(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(str);
+            }
+        }
+        #endregion
     }
 
-    #endregion
 }
 
