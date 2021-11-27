@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 
@@ -22,7 +23,7 @@ namespace FILEIDSMVC.Models
         #region Campos privados
 
         Archivo archivo = new Archivo();
-        Almacenamiento almacenamiento = new Almacenamiento();
+        Almacenamiento almacenamiento = new Almacenamiento(ConfigurationManager.AppSettings["FileCachePath"].ToString());
         Directorio directorio = new Directorio();
         Metadata metadata = new Metadata();
         #endregion
@@ -66,15 +67,25 @@ namespace FILEIDSMVC.Models
         public string NombreDirectorioRaizActivo { get; set; }
 
         /// <summary>
-        /// Nombre del directorio
-        /// </summary>
-        public string NombreSubDirectorioActivo { get; set; }
-
-        /// <summary>
         /// Identificador del directorio activo
         /// </summary>
         public int IdSubDirectorioActivo { get; set; }
 
+        /// <summary>
+        /// Nombre del directorio
+        /// </summary>
+        [Display(Name = "Nombre")]
+        [MaxLength(50, ErrorMessage = "El nombre del directorio no debe exceder 50 caracteres")]
+        [Required]
+        public string NombreSubDirectorioActivo { get; set; }
+
+        /// <summary>
+        /// Descriptor del subdirectorio activo
+        /// </summary>
+        [Display(Name = "Descripción")]
+        [MaxLength(50, ErrorMessage = "La descripción no debe exceder 500 caracteres")]
+        [Required]
+        public string DescriptorSubDirectorioActivo { get; set; }
 
         #endregion
 
@@ -86,7 +97,7 @@ namespace FILEIDSMVC.Models
 
         [Display(Name = "Nombre")]
         [MaxLength(50, ErrorMessage = "El nombre del directorio no debe exceder 50 caracteres")]
-        [Required]
+        [Required (ErrorMessage ="Este campo es requerido")]
         public string NombreDirectorioRaizNuevo { get; set; }
 
         /// <summary>
@@ -95,7 +106,7 @@ namespace FILEIDSMVC.Models
 
         [Display(Name = "Descripción")]
         [MaxLength(50, ErrorMessage = "La descripción no debe exceder 500 caracteres")]
-        [Required]
+        [Required(ErrorMessage = "Este campo es requerido")]
         public string DescriptorDirectorioRaizNuevo { get; set; }
 
         #endregion

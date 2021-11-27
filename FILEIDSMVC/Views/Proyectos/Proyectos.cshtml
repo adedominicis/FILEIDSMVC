@@ -47,14 +47,10 @@
                                     <p class="card-text">@Html.DisplayFor(modelItem => item.DescriptorDirectorio)</p>
                                     <hr>
                                     @*Estas tres funciones requieren llamadas AJAX que hay que practicar*@
-
-                                    <div class="row">
-                                        <div class="col">
-                                            @Html.ActionLink("Ver detalles", "DetallesProyecto", "Proyectos", new { IdDirectorioRaizActivo = item.IdDirectorio, NombreDirectorioRaizActivo = item.NombreDirectorio }, new { @class = "btn btn-outline-info" })
-                                        </div>
-                                        <div class="col">
-                                            <button type="button" class="btn btn-outline-danger">Eliminar proyecto</button>
-                                        </div>
+                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                        @Html.ActionLink("Ver detalles", "DetallesProyecto", "Proyectos", new { IdDirectorioRaizActivo = item.IdDirectorio, NombreDirectorioRaizActivo = item.NombreDirectorio }, new { @class = "btn btn-success" })
+                                        @Html.ActionLink("Nueva carpeta", "CrearSubDirectorio", "Proyectos", new { IdDirPadre = item.IdDirectorio, IdDirRaiz = item.IdDirectorio, NombreDirPadre = item.NombreDirectorio }, new { @class = "btn btn-warning" })
+                                        @Html.ActionLink("Eliminar proyecto", "EliminarProyecto", "Proyectos", new { IdDirectorioRaizActivo = item.IdDirectorio, NombreDirectorioRaizActivo = item.NombreDirectorio }, new { @class = "btn btn-danger" })
                                     </div>
                                     <hr>
                                 </div>
@@ -64,7 +60,20 @@
                 </div>
             </nav>
             <main class="col-lg-8 col-md-8 ms-sm-auto px-md-4">
-                <h2>\@Model.NombreDirectorioRaizActivo</h2>
+                @{
+                    string dirRaizActivo;
+                    if (string.IsNullOrEmpty(Model.NombreDirectorioRaizActivo))
+                    {
+                        dirRaizActivo = @"\";
+                    }
+                    else
+                    {
+                        dirRaizActivo = @"\" + Model.NombreDirectorioRaizActivo;
+                    }
+                    <h2>@dirRaizActivo</h2>
+                }
+
+
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
@@ -103,13 +112,17 @@
                                             </td>
                                             <td>
                                                 @Html.ActionLink("Ver archivos", "ListarArchivosSubdirectorio", "Proyectos",
-                                               new { IdSubDirectorioActivo = item.IdDirectorio, 
+                                               new
+                                                    {
+                                                        IdSubDirectorioActivo = item.IdDirectorio,
                                                    IdDirectorioRaizActivo = Model.IdDirectorioRaizActivo,
                                                NombreSubDirectorioActivo = item.NombreDirectorio,
-                                               NombreDirectorioRaizActivo =Model.NombreDirectorioRaizActivo}, new { @class = "btn btn-outline-success" })
+                                               NombreDirectorioRaizActivo = Model.NombreDirectorioRaizActivo
+                                                    }, new { @class = "btn btn-outline-success" })
 
-                                                @Html.ActionLink("Agregar carpeta", "AgregarSubDirectorio", "Proyectos", new { IdSubDirectorio = item.IdDirectorio }, new { @class = "btn btn-outline-info" })
-                                                @Html.ActionLink("Agregar archivo", "RegistrarArchivo", "Proyectos", new { IdSubDirectorio = item.IdDirectorio, NombreSubDirectorio = item.NombreDirectorio }, new { @class = "btn btn-outline-info" })
+                                               
+                                                @Html.ActionLink("Nueva carpeta", "CrearSubDirectorio", "Proyectos", new { IdDirPadre = item.IdDirectorio, IdDirRaiz = Model.IdDirectorioRaizActivo, NombreDirPadre = item.NombreDirectorio }, new { @class = "btn btn-warning" })
+                                                @Html.ActionLink("Agregar archivo", "RegistrarArchivo", "Proyectos", new { IdDirPadre = item.IdDirectorio, NombreDirPadre = item.NombreDirectorio}, new { @class = "btn btn-outline-info" })
                                                 @Html.ActionLink("Eliminar carpeta", "EliminarDirectorio", "Proyectos", new { IdSubDirectorio = item.IdDirectorio, NombreSubDirectorio = item.NombreDirectorio }, new { @class = "btn btn-outline-danger" })
                                             </td>
                                         </tr>
@@ -143,7 +156,7 @@
 
                                     <tr>
                                         <td>@item.Archivo.IdArchivo</td>
-                                        <td>@string.Format("{0}.{1}",item.Archivo.NombreArchivo,item.Extension)</td>
+                                        <td>@string.Format("{0}.{1}", item.Archivo.NombreArchivo, item.Extension)</td>
                                         <td>@item.Revision</td>
                                         <td>
                                             <h4>Acciones sobre los archivos. Obtener metadata, eliminar, mover.</h4>

@@ -40,7 +40,7 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// Listar directorios raiz
         /// </summary>
         /// <returns></returns>
-        public string ListarDirectorioRaiz()
+        internal string ListarDirectorioRaiz()
         {
             return string.Format("exec ListarDirectorioRaiz");
         }
@@ -53,6 +53,22 @@ namespace FILEIDSWEB_DATA_ACCESS
         public string DesactivarDirectorioRaiz(int idDirectorio)
         {
             return string.Format("exec DesactivarDirectorioRaiz {0}", idDirectorio);
+        }
+
+        /// <summary>
+        /// Inicializar la metadata de un archivo que se acaba de crear.
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns>
+        internal string InicializarMetadata(Almacenamiento alm)
+        {
+            return string.Format("exec ActualizarMetadata {0},{1},'{2}','{3}','{4}','{5}',{6}",
+            alm.Archivo.IdArchivo,
+            alm.VersionArchivo,
+            alm.Metadata.DescriptorEs,
+            alm.Metadata.DescriptorEn,
+            alm.Metadata.Oemsku,
+            alm.Metadata.DescriptorExtra,0);
         }
 
         /// <summary>
@@ -74,9 +90,43 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// </summary>
         /// <param name="idDirectorio"></param>
         /// <returns></returns>
-        public string DesarrollarDirectorioRecursivo(int idDirectorio)
+        internal string DesarrollarDirectorioRecursivo(int idDirectorio)
         {
             return string.Format("exec DesarrollarDirectorioRecursivo {0}", idDirectorio);
+        }
+
+        /// <summary>
+        /// Verificar si dentro del directorioPadre ya existe un archivo con el mismo nombre
+        /// </summary>
+        /// <param name="alm">Objeto Almacenamiento</param>
+        /// <returns></returns>
+        internal string VerificarNombresDuplicados(Almacenamiento alm)
+        {
+            return string.Format("exec VerificarNombresDuplicados '{0}','{1}',{2},{3}",
+                alm.Archivo.NombreArchivo,
+                alm.Extension,
+                alm.Archivo.DirectorioPadre.IdDirectorioPadre,
+                alm.Archivo.DirectorioPadre.IdDirectorioRaiz);
+        }
+
+        /// <summary>
+        /// Verificar existencia de un MD5
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <returns></returns>
+        internal string VerificarMD5(string md5)
+        {
+            return string.Format("exec VerificarMD5 '{0}'", md5);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public string CrearSubDirectorio(Directorio dir)
+        {
+            return string.Format("exec CrearSubDirectorio {0},{1},'{2}','{3}'", dir.IdDirectorioPadre, dir.IdDirectorioRaiz, dir.NombreDirectorio, dir.DescriptorDirectorio);
         }
         #endregion
 
@@ -117,6 +167,8 @@ namespace FILEIDSWEB_DATA_ACCESS
         {
             return string.Format("exec ListarArchivosSubDirectorio {0}", idDirectorio);
         }
+
+
 
 
 

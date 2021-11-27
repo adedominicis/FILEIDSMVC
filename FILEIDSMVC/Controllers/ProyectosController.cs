@@ -4,6 +4,7 @@ using FILEIDSWEB_DATA_ACCESS.FileManagement;
 using FILEIDSWEB_DATA_ACCESS.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,7 @@ namespace FILEIDSMVC.Controllers
         DAO dao = new DAO();
         queryDump q = new queryDump();
 
+        #region Métodos
         /// <summary>
         /// Pantalla principal de proyectos, inicia la carga básica de atributos.
         /// </summary>
@@ -41,20 +43,7 @@ namespace FILEIDSMVC.Controllers
             return View("Proyectos", pvm);
         }
 
-        /// <summary>
-        /// Inicia la vista de carga de archivos.
-        /// </summary>
-        /// <param name="pvm"></param>
-        /// <returns></returns>
-        public ActionResult RegistrarArchivo(ProyectosViewModel pvm)
-        {
-            RegistrarArchivoViewModel ravm = new RegistrarArchivoViewModel();
 
-            ravm.NombreDirectorio = pvm.NombreSubDirectorioActivo;
-            ravm.IdCarpetaPadre = pvm.IdSubDirectorioActivo;
-
-            return View("RegistrarArchivo", ravm);
-        }
 
         /// <summary>
         /// Lista todos los archivos de un subdirectorio
@@ -70,29 +59,43 @@ namespace FILEIDSMVC.Controllers
         }
 
         /// <summary>
-        /// Crear un nuevo proyecto.
+        /// Crear un nuevo proyecto
         /// </summary>
         /// <returns></returns>
-
-        public ActionResult CrearProyecto(ProyectosViewModel pvm)
+        public ActionResult CrearProyecto()
         {
             ViewBag.Title = "Crear un nuevo proyecto";
+            return View(new CrearProyectoViewModel());
+        }
+
+        /// <summary>
+        /// Crear un nuevo proyecto. POST
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult CrearProyecto(CrearProyectoViewModel cProyVm)
+        {
             try
             {
                 if (ModelState.IsValid)
                 {
                     Directorio dir = new Directorio()
                     {
-                        NombreDirectorio = pvm.NombreDirectorioRaizNuevo,
-                        DescriptorDirectorio = pvm.DescriptorDirectorioRaizNuevo
+                        NombreDirectorio = cProyVm.NombreProyecto,
+                        DescriptorDirectorio = cProyVm.DescriptorProyecto
                     };
                     dao.singleReturnQuery(q.CrearDirectorioRaiz(dir));
-                    return View("Proyectos");
+
+                    //[TODO] Debe haber una manera mas elegante de hacer esto.
+                    //pvm.DirectoriosRaiz = dao.ListarDirectorioRaiz();
+                    //return View("Proyectos", pvm);
                 }
                 else
                 {
-                    return View(pvm);
+                    return View(cProyVm);
                 }
+
+                return Proyectos();
             }
             catch (Exception ex)
             {
@@ -102,124 +105,212 @@ namespace FILEIDSMVC.Controllers
         }
 
 
+        /// <summary>
+        /// Crear subdirectorio
+        /// </summary>
+        /// <param name="pvm"></param>
+        /// <returns></returns>
+        public ActionResult CrearSubDirectorio(int IdDirPadre, int IdDirRaiz, string NombreDirPadre)
+        {
+
+            //Viewmodel para el formulario.
+            CrearDirectorioViewModel cdvm = new CrearDirectorioViewModel()
+            {
+                NombreDirectorioPadre = NombreDirPadre,
+                IdDirectorioPadre = IdDirPadre,
+                IdDirectorioRaiz = IdDirRaiz
+            };
+
+            return View("CrearSubDirectorio", cdvm);
+        }
 
         /// <summary>
-        /// Eliminar proyecto.
+        /// 
         /// </summary>
-        /// <param name = "proyecto" ></ param > 0
-        ///
+        /// <param name="IdDirPadre"></param>
+        /// <param name="IdDirRaiz"></param>
+        /// <param name="NombreDirPadre"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult CrearSubDirectorio(CrearDirectorioViewModel cSubDirVm)
+        {
+            ProyectosViewModel pvm = new ProyectosViewModel();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Directorio dir = new Directorio()
+                    {
+                        DescriptorDirectorio = cSubDirVm.DescriptorNuevoDirectorio,
+                        IdDirectorioPadre = cSubDirVm.IdDirectorioPadre,
+                        IdDirectorioRaiz = cSubDirVm.IdDirectorioRaiz,
+                        NombreDirectorio = cSubDirVm.NombreNuevoDirectorio
+                    };
+                    dao.singleReturnQuery(q.CrearSubDirectorio(dir));
 
-        //public ActionResult Eliminar(ProyectosModel proyecto)
-        //{
-        //    dao.singleReturnQuery(q.DesactivarDirectorioRaiz(proyecto.IdDirectorio));
-        //    proyecto.ListaDirectorios = dao.ListarDirectorioRaiz();
-        //    return View("Proyectos", proyecto);
-        //}
+                    //Retornar a proyectos.
+                    return Proyectos();
+
+                }
+                else
+                {
+                    return View(cSubDirVm);
+                }
+            }
+            catch (Exception)
+            {
+                pvm.DirectoriosRaiz = dao.ListarDirectorioRaiz();
+                return View("Proyectos", pvm);
+            }
+
+        }
+
+        /// <summary>
+        /// Acción GET de la carga de archivos, inicia el menú
+        /// </summary>
+        /// <param name="pvm"></param>
+        /// <returns></returns>
+        public ActionResult RegistrarArchivo(int IdDirPadre, string NombreDirPadre)
+        {
+
+            RegistrarArchivoViewModel ravm = new RegistrarArchivoViewModel()
+            {
+                NombreDirectorio = NombreDirPadre,
+                IdCarpetaPadre = IdDirPadre
+            };
+
+            return View("RegistrarArchivo", ravm);
+        }
+
+        /// <summary>
+        /// Acción POST de registro de archivo.
+        /// </summary>
+        /// <param name="IdDirPadre"></param>
+        /// <param name="NombreDirPadre"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult RegistrarArchivo(RegistrarArchivoViewModel ravm)
+        {
+            ProyectosViewModel pvm = new ProyectosViewModel();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    //Registrar archivo...
+                    InitProcesoRegistro(ravm, out bool resProcesoRegistro);
+                    
+                    if (resProcesoRegistro)
+                    {
+                        return View("Proyectos", pvm);
+                    }
+                    return View("Proyectos", pvm);
+                }
+                else
+                {
+                    return View("RegistrarArchivo", ravm);
+                }
+            }
+            catch (Exception)
+            {
+                pvm.DirectoriosRaiz = dao.ListarDirectorioRaiz();
+                return View("Proyectos", pvm);
+            }
+        }
 
 
-        ///// <summary>
-        ///// Editar
-        ///// </summary>
-        ///// <param name="proyecto"></param>
-        ///// <returns></returns>
-        //public ActionResult Editar(ProyectosModel proyecto)
-        //{
-        //    ViewBag.Title = string.Format("Editando: /{0}",proyecto.NombreDirectorio);
-        //    return View("CrearProyecto",proyecto);
-        //}
+        #endregion
+
+        #region Comentados
 
 
-        ///// <summary>
-        ///// Carga inicial
-        ///// Menú de registro y carga de nuevos archivos.
-        ///// </summary>
-        ///// <returns></returns>
-        //public ActionResult RegistrarArchivo(ProyectosModel proyecto)
-        //{
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="proyecto"></param>
+        /// <returns></returns>
+        public ActionResult EliminarDirectorio(int Id)
+        {
+            dao.singleReturnQuery(q.DesactivarDirectorioRaiz(Id));
+            ProyectosViewModel pvm = new ProyectosViewModel();
+            pvm.DirectoriosRaiz = dao.ListarDirectorioRaiz();
+            return View("Proyectos", pvm);
 
-        //    //Model para pasar a la vista.
-        //    ProyectosViewModel regArchivo = new ProyectosViewModel();
-        //    regArchivo.NombreDirectorio = proyecto.NombreDirectorio;
-        //    regArchivo.IdCarpetaPadre = proyecto.IdDirectorio;
-        //    return View(regArchivo);
-        //}
+        }
 
-        ///// <summary>
-        ///// Respuesta POST
-        ///// Menú de registro y carga de nuevos archivos.
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public ActionResult RegistrarArchivo(ProyectosViewModel model)
-        //{
-        //    ViewBag.ErrorMessages = "";
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            if (registerAndTransfer(model))
-        //            {
-        //                return View("ViewFile");
-        //            }
-        //            else
-        //            {
-        //                ViewBag.ErrorMessages = "Error al registrar o guardar el archivo";
-        //            }
-        //        }
-        //        return View(new ProyectosViewModel());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ViewBag.ErrorMessages = ex.Message;
-        //        return View(new ProyectosViewModel());
-        //    }
-
-        //}
+        #endregion
 
 
-        //#region Helpers
-        //private bool registerAndTransfer(ProyectosViewModel model)
-        //{
-        //    //Si el archivo tiene algo
-        //    if (model.ArchivoSubido.ContentLength > 0)
-        //    {
+        #region Helpers
+        private Almacenamiento InitProcesoRegistro(RegistrarArchivoViewModel ravm,out bool resProcesoRegistro)
+        {
+            Almacenamiento alm = new Almacenamiento();
+            resProcesoRegistro = false;
 
-        //        //Asignar nombre de archivo
-        //        model.NombreArchivoSubido = Path.GetFileNameWithoutExtension(model.ArchivoSubido.FileName);
+            //Si el archivo no viene vacío.
+            if (ravm.ArchivoSubido.ContentLength > 0)
+            {
 
-        //        //Si el usuario decide omitir el nombre del archivo, se usa el nombre del archivo subido.
-        //        if (string.IsNullOrEmpty(model.NombreArchivo))
-        //        {
-        //            model.NombreArchivo = model.NombreArchivoSubido;
-        //        }
+                //Asignar nombre de archivo
+                ravm.NombreArchivoSubido = Path.GetFileNameWithoutExtension(ravm.ArchivoSubido.FileName);
 
-        //        //Clases de manipulacion de archivos.
-        //        FileManager fm = new FileManager();
-        //        Metadata fData = new Metadata();
-        //        //Archivo y ArchivoViewModel deberían venir de la misma interfaz o heredar de un comun.
-        //        fData.NombreArchivo = model.NombreArchivo;
-        //        fData.DescriptorEn = model.DescriptorEn;
-        //        fData.DescriptorEs = model.DescriptorEs;
-        //        fData.Oemsku = model.OemSku;
-        //        fData.IdProyecto = Convert.ToInt32(model.IdCarpetaPadre);
-        //        fData.DescriptorExtra = model.DescriptorExtra;
-        //        fData.Extension = Path.GetExtension(model.ArchivoSubido.FileName);
-        //        //Si la extensión no tiene un ID, quiza sea razonable que se agregue sola, como en Hormesa FILEIDS
-        //        //Por ahora subamos solo archivos conocidos.
+                //Si el usuario decide omitir el nombre del archivo, se usa el nombre del archivo subido.
+                if (string.IsNullOrEmpty(ravm.NombreArchivo))
+                {
+                    ravm.NombreArchivo = ravm.NombreArchivoSubido;
+                }
 
-        //        fData.IdExtension = Convert.ToInt32(dao.singleReturnQuery(q.consultaIdFromExtension(fData.Extension)));
+                //Iniciar proceso de ingreso de archivos.
+                FileManager fm = new FileManager();
+                alm = fm.IngresarFichero(AlmacenamientoDataAccessMapper(ravm), out bool resultado);
+                if (resultado)
+                {
+                    //Fichero ingresado correctamente, ingresar metadata.
+                    resProcesoRegistro= fm.ActualizarMetadata(alm);
+                }
+            }
+            return alm;
+        }
 
-        //        //Agregar archivo.
-        //        fData = dao.addRecord(fData);
+        /// <summary>
+        /// Conversor del ViewModel al Data Access Model para la clase Almacenamiento del Data Access Model.
+        /// </summary>
+        /// <param name="ravm"></param>
+        /// <returns></returns>
+        private Almacenamiento AlmacenamientoDataAccessMapper(RegistrarArchivoViewModel ravm)
+        {
+            //Objetos de almacenamiento.
+            Metadata met = new Metadata()
+            {
+                DescriptorEs = ravm.DescriptorEs,
+                DescriptorEn = ravm.DescriptorEn,
+                DescriptorExtra = ravm.DescriptorExtra,
+                Oemsku=ravm.OemSku
+            };
+            Directorio dir = new Directorio()
+            {
+                NombreDirectorio = ravm.NombreDirectorio,
+                IdDirectorioPadre = ravm.IdCarpetaPadre
+            };
 
-        //        if (!string.IsNullOrEmpty(fData.Id))
-        //        {
-        //            fm.CrearArchivo(fData, model.ArchivoSubido);
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
-        //#endregion
+            Archivo arc = new Archivo()
+            {
+                IdDirectorioPadre = ravm.IdCarpetaPadre,
+                NombreArchivo = ravm.NombreArchivo,
+                DirectorioPadre = dir
+            };
+            Almacenamiento alm = new Almacenamiento(ConfigurationManager.AppSettings["FileCachePath"].ToString())
+            {
+                ArchivoFisico = ravm.ArchivoSubido,
+                Extension = ravm.Extension,
+                Archivo = arc,
+                Metadata=met
+                
+            };
+
+            return alm;
+        }
+        #endregion
+
+
     }
 }

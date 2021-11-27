@@ -96,8 +96,11 @@ namespace FILEIDSWEB_DATA_ACCESS
             }
         }
 
-
-
+        /// <summary>
+        /// Consulta genérica que retorna un solo resultado escalar en string.
+        /// </summary>
+        /// <param name="query">Consulta SQL.</param>
+        /// <returns></returns>
         public string singleReturnQuery(string query)
         {
             try
@@ -126,7 +129,11 @@ namespace FILEIDSWEB_DATA_ACCESS
             return null;
         }
 
-        // Consulta generica "select" que retorna un datatable
+       /// <summary>
+       /// Consulta genéricaque retorna un datatable.
+       /// </summary>
+       /// <param name="query"></param>
+       /// <returns></returns>
         public DataTable genericSelectQuery(string query)
         {
             try

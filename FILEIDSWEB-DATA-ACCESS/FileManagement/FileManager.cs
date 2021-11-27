@@ -8,6 +8,8 @@ using FILEIDSWEB_DATA_ACCESS.Logging;
 using System.Web;
 using System.IO;
 using System.Configuration;
+using System.Security.Cryptography;
+using System.Data;
 
 namespace FILEIDSWEB_DATA_ACCESS.FileManagement
 {
@@ -16,84 +18,90 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
 
         // Directorios principales de sistema de archivos.
         #region private fields
-
-        Archivo direccion = new Archivo();
         DAO dao = new DAO();
         queryDump q = new queryDump();
-        private string oemPath;
-        private string productosPath;
-        private string proyectosPath;
-        private string rootDir;
         #endregion
 
         #region public properties
-        public string OemPath
-        {
-            get { return oemPath; }
-            set { oemPath = value; }
-        }
-        public string ProductosPath
-        {
-            get { return productosPath; }
-            set { productosPath = value; }
-        }
-        public string ProyectosPath
-        {
-            get { return proyectosPath; }
-            set { proyectosPath = value; }
-        }
-        public string CachePath
-        {
-            get { return rootDir; }
-            set { rootDir = value; }
-        }
+
 
         #endregion
 
         #region constructors
         public FileManager()
         {
-  
-        }
-
-        public FileManager(string oempath, string productospath, string proyectospath, string cachepath)
-        {
-            oemPath = oempath;
-            productosPath = productospath;
-            proyectosPath = proyectospath;
-            rootDir = cachepath;
 
         }
+
         #endregion
 
-        // Administrador de archivos.
+        #region Métodos públicos.
+        /// <summary>
+        /// Proceso completo de ingreso de archivos al sistema.
+        /// 1- Carga de fichero en sistema de archivos
+        /// 2- Si la carga del fichero resulta bien, cargar archivo en almacenamiento (DB)
+        /// 3- Si el paso 2 resulta, termina el proceso.
+        /// 4- Si el paso 2 no resulta, eliminar el fichero, termina el proceso.
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns>
+        public Almacenamiento IngresarFichero(Almacenamiento alm,out bool resIngresarFichero)
+        {
+            resIngresarFichero = false;
+            //Setear ruta de almacenamiento.
+            alm.RutaAlmacenamiento = ConfigurationManager.AppSettings["FileCachePath"].ToString();
 
-        public bool CrearArchivo(Almacenamiento alm)
+            if (CargarFicheroEnLocal(alm))
+            {
+                alm = CrearActualizarAlmacenamiento(alm, out resIngresarFichero);
+                if (!resIngresarFichero)
+                {
+                    EliminarArchivoEnLocal(alm);
+                }
+            }
+            return alm;
+        }
+
+        /// <summary>
+        /// Actualizar metadata de un archivo.
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns>
+        public bool ActualizarMetadata(Almacenamiento alm)
         {
             //Setear ruta de almacenamiento.
-            alm.RutaAlmacenamiento=ConfigurationManager.AppSettings["FileCachePath"].ToString();
+            alm.RutaAlmacenamiento = ConfigurationManager.AppSettings["FileCachePath"].ToString();
 
+            dao.singleReturnQuery(q.InicializarMetadata(alm));
+            return true;
+
+        }
+
+        #endregion
+
+
+
+
+
+        #region Métodos privados
+
+        /// <summary>
+        /// Borra la copia física de un archivo en el sistema de almacenamiento del backend
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns>
+        private bool EliminarArchivoEnLocal(Almacenamiento alm)
+        {
             try
             {
                 //Si no existe el directorio raiz, crearlo.
-                if (!Directory.Exists(rootDir))
+                if (Directory.Exists(alm.RutaAlmacenamiento))
                 {
-                    Directory.CreateDirectory(rootDir);
-                }
-
-                //Guardar archivo físico
-                alm.ArchivoFisico.SaveAs(alm.getLocalStoragePath());
-                // Path completo del archivo a guardar.
-
-                if (File.Exists(alm.getLocalStoragePath()))
-                {
-                    //El archivo fue guardado efectivamente y puede registrarse en la db
-                    return dao.genericSelectQuery(q.CrearArchivo(alm)) != null;
+                    File.Delete(alm.getLocalStoragePath());
+                    return !File.Exists(alm.getLocalStoragePath());
                 }
                 else
                 {
-                    //El archivo no pudo registrarse en la db. Borrar fisico.
-                    File.Delete(alm.getLocalStoragePath());
                     return false;
                 }
             }
@@ -101,28 +109,109 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
             {
                 return false;
             }
-            
+        }
+
+        /// <summary>
+        /// Inserta los archivos físicos en el sistema de almacenamiento del backend.
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns>True si pudo guardar archivo en local, false si no.</returns>
+        private bool CargarFicheroEnLocal(Almacenamiento alm)
+        {
+            try
+            {
+                //Si no existe el directorio raiz, crearlo.
+                if (!Directory.Exists(alm.RutaAlmacenamiento))
+                {
+                    Directory.CreateDirectory(alm.RutaAlmacenamiento);
+                }
+
+                //Guardar archivo físico
+                alm.ArchivoFisico.SaveAs(alm.getLocalStoragePath());
+
+                return File.Exists(alm.getLocalStoragePath());
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Controla la inserción de archivos en la base de datos.
+        /// Este metodo es invocado cuando es seguro que el archivo físico fue almacenado en una caché
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns
+        private Almacenamiento CrearActualizarAlmacenamiento(Almacenamiento alm,out bool TransactionResult)
+        {
+            TransactionResult = false;
+
+            alm.MD5= GetMD5(alm.ArchivoFisico);
+
+            //Id del almacenamiento donde se encuentra el MD5
+            string IdAlmMd5Existente = dao.singleReturnQuery(q.VerificarMD5(alm.MD5));
+
+            if (string.IsNullOrEmpty(IdAlmMd5Existente))
+            {
+                //El MD5 del archivo suministrado no existe en la DB
+                int IdArchivoExistente = Convert.ToInt32(dao.singleReturnQuery(q.VerificarNombresDuplicados(alm)));
+
+                if (IdArchivoExistente != 0)
+                {
+                    //Crear una nueva version del archivo con ID_ARCHIVO= IdArchivoExistente
+                    
+                    return alm;
+                }
+                else
+                {
+                    //Agregar archivo nuevo y actualizar propiedades desde la base de datos
+                    DataTable CrearArchivoResponse=dao.genericSelectQuery(q.CrearArchivo(alm));
+                    if (CrearArchivoResponse!=null)
+                    {
+                        alm.Archivo.IdArchivo = CrearArchivoResponse.Rows[0].Field<int>("ID_ARCHIVO");
+                        alm.VersionArchivo = CrearArchivoResponse.Rows[0].Field<int>("VERSION_ARCHIVO");
+                        alm.IdAlmacenamiento = CrearArchivoResponse.Rows[0].Field<int>("ID_ALMACENAMIENTO");
+                        alm.RutaAlmacenamiento = CrearArchivoResponse.Rows[0].Field<string>("RUTA_ALMACENAMIENTO");
+                        alm.Metadata.IdMetadata = CrearArchivoResponse.Rows[0].Field<string>("ID_METADATA");
+                        TransactionResult = true;
+                    }
+                    return alm;
+
+                }
+            }
+            else
+            {
+                //El MD5 del archivo suministrado existe en la DB. Funcionalidad pendiente.
+                TransactionResult = false;
+                return alm;
+            }
 
         }
 
-        //public bool eliminarArchivo(Archivo ruta)
-        //{
-        //    if (dao.genericDeleteQuery(q.execBorrarRuta(ruta)))
-        //    {
-        //        if (File.Exists(ruta.StrRuta))
-        //        {
-        //            File.Delete(ruta.StrRuta);
-        //        }
+        /// <summary>
+        /// Obtener el MD5 del archivo en un string
+        /// </summary>
+        /// <param name="file">Objeto archivo.</param>
+        /// <returns></returns>
+        private string GetMD5(HttpPostedFileBase file)
+        {
+            byte[] MD5ByteArray;
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(file.FileName))
+                {
+                    MD5ByteArray=md5.ComputeHash(stream);
+                }
+            }
 
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
+            return BitConverter.ToString(MD5ByteArray).Replace("-", "").ToLowerInvariant();
+        }
 
-        //}
+        #endregion
 
+        #region Legacy y por corregir.
         public string verArchivo(string rutaRelativa)
         {
 
@@ -134,5 +223,8 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
             return string.Format(embed, rutaRelativa);
 
         }
+
+
+        #endregion
     }
 }

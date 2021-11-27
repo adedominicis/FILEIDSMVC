@@ -14,7 +14,6 @@ namespace FILEIDSWEB_DATA_ACCESS.Model
 		public int IdRevisionLevel { get; set; }
 		public int IdDirectorioPadre { get; set; }
 		public bool EsActivo { get; set; }
-
 		public string Revision { get; set; }
 
 		/// <summary>

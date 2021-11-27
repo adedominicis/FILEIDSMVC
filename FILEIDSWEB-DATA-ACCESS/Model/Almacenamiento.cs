@@ -10,13 +10,13 @@ namespace FILEIDSWEB_DATA_ACCESS.Model
         }
         public Almacenamiento()
         {
-
         }
         public int IdAlmacenamiento { get; set; }
         public string RutaAlmacenamiento { get; set; }
         public int VersionArchivo { get; set; }
         public string Revision { get; set; }
         public string Extension { get; set; }
+        public string MD5 { get; set; }
         public Archivo Archivo { get; set; }
         public Metadata Metadata { get; set; }
 

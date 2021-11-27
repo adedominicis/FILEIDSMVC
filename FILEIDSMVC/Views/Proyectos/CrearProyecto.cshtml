@@ -1,4 +1,4 @@
-﻿@model FILEIDSMVC.Models.ProyectosViewModel
+﻿@model FILEIDSMVC.Models.CrearProyectoViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +9,7 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    using (Html.BeginForm("RegistrarArchivo", "Proyectos", FormMethod.Post, new { @class = "container", enctype = "multipart/form-data" }))
+    using (Html.BeginForm("CrearProyecto", "Proyectos", FormMethod.Post, new { @class = "container", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -17,24 +17,24 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                @Html.LabelFor(model => model.NombreDirectorioRaizNuevo, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.NombreProyecto, htmlAttributes: new { @class = "control-label col-md-2 mt-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.NombreDirectorioRaizNuevo, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.NombreDirectorioRaizNuevo, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.NombreProyecto, new { htmlAttributes = new { @class = "form-control mt-2" } })
+                    @Html.ValidationMessageFor(model => model.NombreProyecto, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.DescriptorDirectorioRaizNuevo, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.DescriptorProyecto, htmlAttributes: new { @class = "control-label col-md-2 mt-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.DescriptorDirectorioRaizNuevo, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.DescriptorDirectorioRaizNuevo, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.DescriptorProyecto, new { htmlAttributes = new { @class = "form-control mt-2" } })
+                    @Html.ValidationMessageFor(model => model.DescriptorProyecto, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Crear proyecto" class="btn-success" />
+                    <input type="submit" value="Crear proyecto" class="btn btn-success mt-3" />
                 </div>
             </div>
         </div>

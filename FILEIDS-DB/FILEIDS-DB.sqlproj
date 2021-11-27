@@ -94,6 +94,8 @@
     <Build Include="dbo\Stored Procedures\GetMetadata.sql" />
     <Build Include="dbo\Stored Procedures\TESTS_ResetearTodo.sql" />
     <Build Include="dbo\Stored Procedures\ListarArchivosSubDirectorio.sql" />
+    <Build Include="dbo\Stored Procedures\VerificarMD5.sql" />
+    <Build Include="dbo\Stored Procedures\VerificarNombresDuplicados.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="FILEIDS-DB.refactorlog" />

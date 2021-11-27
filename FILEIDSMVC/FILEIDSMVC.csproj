@@ -186,6 +186,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CrearDirectorioViewModel.cs" />
+    <Compile Include="Models\CrearProyectoViewModel.cs" />
     <Compile Include="Models\DesignReviewModel.cs" />
     <Compile Include="Models\ProyectosViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -456,6 +458,7 @@
     <Content Include="Views\DesignReview\Index.cshtml" />
     <Content Include="Views\Proyectos\CrearProyecto.cshtml" />
     <Content Include="Views\Sweet\Alert.cshtml" />
+    <Content Include="Views\Proyectos\CrearSubDirectorio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

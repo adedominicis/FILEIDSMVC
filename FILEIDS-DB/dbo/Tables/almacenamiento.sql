@@ -7,6 +7,7 @@
     [ID_METADATA] INT NOT NULL, 
     [ID_EXTENSION] INT NOT NULL,
 	[ID_REVISION] INT NOT NULL, 
+    [MD5] VARCHAR(32) NULL, 
     CONSTRAINT [FK_ALMACENAMIENTO_METADATA] FOREIGN KEY ([id_metadata]) REFERENCES [dbo].[metadata] ([id_metadata]),
 	CONSTRAINT [FK_ALMACENAMIENTO_ARCHIVO] FOREIGN KEY ([id_archivo]) REFERENCES [dbo].[archivos] ([id_archivo]),
 	CONSTRAINT [FK_ALMACENAMIENTO_EXTENSIONES] FOREIGN KEY ([id_extension]) REFERENCES [extensiones]([id_extension]),
