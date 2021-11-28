@@ -1,4 +1,5 @@
-﻿@model FILEIDSMVC.Models.ProyectosViewModel
+﻿@using FILEIDSMVC.Models
+@model FILEIDSMVC.Models.ProyectosViewModel
 @{
     ViewBag.Title = "Proyectos";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,7 +8,24 @@
 @if (User.Identity.IsAuthenticated)
 {
 
-
+    //Modal metadatos.
+    <div class="modal fade" id="mdMetadata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Propiedades</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_PartialEditarMetadata",new EditarMetadataViewModel())
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                    <button type="button" class="btn btn-primary" onclick="GuardarMetadata()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-4 col-lg-4 me-0 px-3" href="#">Proyectos</a>
         <hr>
@@ -21,7 +39,6 @@
             </li>
         </ul>
     </header>
-
 
     <div class="container-fluid">
         <div class="row">
@@ -50,7 +67,7 @@
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                         @Html.ActionLink("Ver detalles", "DetallesProyecto", "Proyectos", new { IdDirectorioRaizActivo = item.IdDirectorio, NombreDirectorioRaizActivo = item.NombreDirectorio }, new { @class = "btn btn-success" })
                                         @Html.ActionLink("Nueva carpeta", "CrearSubDirectorio", "Proyectos", new { IdDirPadre = item.IdDirectorio, IdDirRaiz = item.IdDirectorio, NombreDirPadre = item.NombreDirectorio }, new { @class = "btn btn-warning" })
-                                        @Html.ActionLink("Eliminar proyecto", "EliminarProyecto", "Proyectos", new { IdDirectorioRaizActivo = item.IdDirectorio, NombreDirectorioRaizActivo = item.NombreDirectorio }, new { @class = "btn btn-danger" })
+                                        @*@Html.ActionLink("Eliminar proyecto", "EliminarProyecto", "Proyectos", new { IdDirectorioRaizActivo = item.IdDirectorio, NombreDirectorioRaizActivo = item.NombreDirectorio }, new { @class = "btn btn-danger" })*@
                                     </div>
                                     <hr>
                                 </div>
@@ -118,12 +135,12 @@
                                                    IdDirectorioRaizActivo = Model.IdDirectorioRaizActivo,
                                                NombreSubDirectorioActivo = item.NombreDirectorio,
                                                NombreDirectorioRaizActivo = Model.NombreDirectorioRaizActivo
-                                                    }, new { @class = "btn btn-outline-success" })
+                                                    }, new { @class = "btn btn-outline-success px-2" })
 
-                                               
-                                                @Html.ActionLink("Nueva carpeta", "CrearSubDirectorio", "Proyectos", new { IdDirPadre = item.IdDirectorio, IdDirRaiz = Model.IdDirectorioRaizActivo, NombreDirPadre = item.NombreDirectorio }, new { @class = "btn btn-warning" })
-                                                @Html.ActionLink("Agregar archivo", "RegistrarArchivo", "Proyectos", new { IdDirPadre = item.IdDirectorio, NombreDirPadre = item.NombreDirectorio}, new { @class = "btn btn-outline-info" })
-                                                @Html.ActionLink("Eliminar carpeta", "EliminarDirectorio", "Proyectos", new { IdSubDirectorio = item.IdDirectorio, NombreSubDirectorio = item.NombreDirectorio }, new { @class = "btn btn-outline-danger" })
+                                                @Html.ActionLink("Agregar archivo", "RegistrarArchivo", "Proyectos", new { IdDirPadre = item.IdDirectorio, NombreDirPadre = item.NombreDirectorio }, new { @class = "btn btn-outline-info px-2" })
+                                                @Html.ActionLink("Nueva carpeta", "CrearSubDirectorio", "Proyectos", new { IdDirPadre = item.IdDirectorio, IdDirRaiz = Model.IdDirectorioRaizActivo, NombreDirPadre = item.NombreDirectorio }, new { @class = "btn btn-outline-warning px-2" })
+
+                                                @*@Html.ActionLink("Eliminar carpeta", "EliminarDirectorio", "Proyectos", new { IdSubDirectorio = item.IdDirectorio, NombreSubDirectorio = item.NombreDirectorio }, new { @class = "btn btn-outline-danger" })*@
                                             </td>
                                         </tr>
                                     }
@@ -143,24 +160,23 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>Revisión</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            @if (Model != null && Model.Almacenamientos != null)
+                            @if (Model != null && Model.Archivos != null)
                             {
-                                foreach (var item in Model.Almacenamientos)
+                                foreach (var item in Model.Archivos)
                                 {
 
                                     <tr>
-                                        <td>@item.Archivo.IdArchivo</td>
-                                        <td>@string.Format("{0}.{1}", item.Archivo.NombreArchivo, item.Extension)</td>
-                                        <td>@item.Revision</td>
+                                        <td>@item.IdArchivo</td>
+                                        <td>@string.Format("{0}.{1}", item.NombreArchivo, item.Extension)</td>
                                         <td>
-                                            <h4>Acciones sobre los archivos. Obtener metadata, eliminar, mover.</h4>
-                                        </td>
+                                            <button type="button" class="btn btn-secondary px-2" onclick="MostrarModalMetadata(@item.IdArchivo,'@item.NombreArchivo','@item.Extension')">
+                                                Propiedades
+                                            </button>
                                     </tr>
                                 }
                             }
@@ -168,18 +184,7 @@
                         </tbody>
                     </table>
                 </div>
-                @*<div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class=""></div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class=""></div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h4>Nombre del archivo seleccionado</h4>
-                    </div>
-                    <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" width="2304" height="972" style="display: block; height: 486px; width: 1152px;"></canvas>*@
+
 
             </main>
         </div>
@@ -188,6 +193,9 @@
     <div>
         @Html.ActionLink("Volver", "Index", "Home")
     </div>
+
+
+
 
     @section scripts{
         <script src="~/Scripts/Controllers/Proyectos.js"></script>

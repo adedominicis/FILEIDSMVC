@@ -94,10 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
-    <Content Include="Content\materialize\css\materialize.css" />
-    <Content Include="Content\materialize\css\materialize.min.css" />
-    <Content Include="Content\materialize\font\material-design-icons\LICENSE.txt" />
-    <Content Include="Content\materialize\font\material-design-icons\Material-Design-Icons.svg" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -107,8 +103,6 @@
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
-    <Content Include="Scripts\materialize\materialize.js" />
-    <Content Include="Scripts\materialize\materialize.min.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -182,50 +176,6 @@
     <Content Include="Scripts\umd\popper.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\materialize\fonts\roboto\Roboto-Bold.eot" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Bold.ttf" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Bold.woff" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Bold.woff2" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Light.eot" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Light.ttf" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Light.woff" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Light.woff2" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Medium.eot" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Medium.ttf" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Medium.woff" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Medium.woff2" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Regular.eot" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Regular.ttf" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Regular.woff" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Regular.woff2" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Thin.eot" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Thin.ttf" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Thin.woff" />
-    <None Include="Content\materialize\fonts\roboto\Roboto-Thin.woff2" />
-    <None Include="Content\materialize\font\material-design-icons\Material-Design-Icons.eot" />
-    <None Include="Content\materialize\font\material-design-icons\Material-Design-Icons.ttf" />
-    <None Include="Content\materialize\font\material-design-icons\Material-Design-Icons.woff" />
-    <None Include="Content\materialize\font\material-design-icons\Material-Design-Icons.woff2" />
-    <None Include="Content\materialize\font\roboto\Roboto-Bold.eot" />
-    <None Include="Content\materialize\font\roboto\Roboto-Bold.ttf" />
-    <None Include="Content\materialize\font\roboto\Roboto-Bold.woff" />
-    <None Include="Content\materialize\font\roboto\Roboto-Bold.woff2" />
-    <None Include="Content\materialize\font\roboto\Roboto-Light.eot" />
-    <None Include="Content\materialize\font\roboto\Roboto-Light.ttf" />
-    <None Include="Content\materialize\font\roboto\Roboto-Light.woff" />
-    <None Include="Content\materialize\font\roboto\Roboto-Light.woff2" />
-    <None Include="Content\materialize\font\roboto\Roboto-Medium.eot" />
-    <None Include="Content\materialize\font\roboto\Roboto-Medium.ttf" />
-    <None Include="Content\materialize\font\roboto\Roboto-Medium.woff" />
-    <None Include="Content\materialize\font\roboto\Roboto-Medium.woff2" />
-    <None Include="Content\materialize\font\roboto\Roboto-Regular.eot" />
-    <None Include="Content\materialize\font\roboto\Roboto-Regular.ttf" />
-    <None Include="Content\materialize\font\roboto\Roboto-Regular.woff" />
-    <None Include="Content\materialize\font\roboto\Roboto-Regular.woff2" />
-    <None Include="Content\materialize\font\roboto\Roboto-Thin.eot" />
-    <None Include="Content\materialize\font\roboto\Roboto-Thin.ttf" />
-    <None Include="Content\materialize\font\roboto\Roboto-Thin.woff" />
-    <None Include="Content\materialize\font\roboto\Roboto-Thin.woff2" />
     <None Include="packages.config" />
     <None Include="Scripts\esm\popper-utils.js.map" />
     <None Include="Scripts\esm\popper-utils.min.js.map" />

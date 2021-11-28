@@ -8,7 +8,8 @@ CREATE PROCEDURE [dbo].[CrearArchivo]
 	@NombreArchivo varchar(50),
 	@IdCarpetaPadre int,
 	@ExtensionArchivo varchar(10),
-	@FileSystemRoot varchar(256)
+	@RutaAlmacenamiento varchar(256),
+	@MD5 varchar(32)
 
 AS
 begin
@@ -17,7 +18,6 @@ declare @IdArchivo int
 declare @IdExtension int
 declare @IdMetadata int
 declare @IdAlmacenamiento int
-declare @RutaAlmacenamiento varchar(256)
 
 begin transaction T1
 	begin try
@@ -47,9 +47,8 @@ begin transaction T1
 		set @IdMetadata=IDENT_CURRENT('metadata')
 
 		--5 Crear slot de almacenamiento.
-		set @RutaAlmacenamiento=@FileSystemRoot+'\'+CONVERT(varchar(20), @IdAlmacenamiento)+'.'+@ExtensionArchivo
-		insert into almacenamiento(ruta,id_archivo,version_archivo,id_metadata,id_extension,id_revision)
-		values(@RutaAlmacenamiento,@IdArchivo,1,@IdMetadata,@IdExtension,1)
+		insert into almacenamiento(ruta,id_archivo,version_archivo,id_metadata,id_extension,id_revision,MD5)
+		values(@RutaAlmacenamiento,@IdArchivo,1,@IdMetadata,@IdExtension,1,@MD5)
 
 		--6 Obtener el ID del almacenamiento
 		select @IdAlmacenamiento=id_almacenamiento from archivos,almacenamiento,extensiones 

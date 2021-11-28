@@ -78,11 +78,13 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// <returns></returns>
         public string CrearArchivo(Almacenamiento alm)
         {
-            return string.Format("exec CrearArchivo '{0}',{1},'{2}','{3}'",
+            return string.Format("exec CrearArchivo '{0}',{1},'{2}','{3}','{4}'",
                 alm.Archivo.NombreArchivo,
                 alm.Archivo.IdDirectorioPadre,
                 alm.Extension,
-                alm.RutaAlmacenamiento);
+                alm.getLocalStoragePath(),
+                alm.MD5
+                );
         }
 
         /// <summary>
@@ -128,6 +130,19 @@ namespace FILEIDSWEB_DATA_ACCESS
         {
             return string.Format("exec CrearSubDirectorio {0},{1},'{2}','{3}'", dir.IdDirectorioPadre, dir.IdDirectorioRaiz, dir.NombreDirectorio, dir.DescriptorDirectorio);
         }
+
+
+        /// <summary>
+        /// Obtener metadatos de un archivo para una versión particular o todas sus versiones.
+        /// </summary>
+        /// <param name="idArchivo"></param>
+        /// <param name="versionArchivo"></param>
+        /// <returns></returns>
+        public string GetMetadata(int idArchivo, int versionArchivo)
+        {
+            return string.Format("exec GetMetadata {0},{1}", idArchivo, versionArchivo);
+        }
+
         #endregion
 
 

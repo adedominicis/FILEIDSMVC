@@ -16,11 +16,12 @@ namespace FILEIDSWEB_DATA_ACCESS.Model
         }
 
         #region Propiedades públicas
-        public string IdMetadata { get; set; }
+        public int IdMetadata { get; set; }
         public string Oemsku { get; set; }
         public string DescriptorEn { get; set; }
         public string DescriptorEs { get; set; }
         public string DescriptorExtra { get; set; }
+        public int Version { get; set; }
 
         #endregion
         //public string PartId { get; set; }

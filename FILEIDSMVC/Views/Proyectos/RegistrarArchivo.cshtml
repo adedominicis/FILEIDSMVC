@@ -7,10 +7,12 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    
+
     using (Html.BeginForm("RegistrarArchivo", "Proyectos", FormMethod.Post, new { @class = "container", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
+
+
 
         <section class="bg-light pb-5 pt-5">
             <div class="container pb-5 pt-5">
@@ -61,6 +63,9 @@
                                 </svg>
                             </button>
                         </div>
+
+                        <input name="IdDirectorioPadre" type="hidden" value=@Model.IdDirectorioPadre>
+                        <input name="NombreDirectorioPadre" type="hidden" value=@Model.NombreDirectorio>
                     </form>
                 </div>
             </div>

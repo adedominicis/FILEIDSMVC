@@ -304,10 +304,9 @@ namespace FILEIDSWEB_DATA_ACCESS
         /// </summary>
         /// <param name="idSubDirectorio"></param>
         /// <returns></returns>
-        public List<Almacenamiento> ListarArchivosSubDirectorio(int idSubDirectorio)
+        public List<Archivo> ListarArchivosSubDirectorio(int idSubDirectorio)
         {
-            List<Almacenamiento> lista = new List<Almacenamiento>();
-            Archivo arc;
+            List<Archivo> lista = new List<Archivo>();
             startConnection();
 
             DataTable res = genericSelectQuery(q.ListarArchivosSubDirectorio(idSubDirectorio));
@@ -316,21 +315,16 @@ namespace FILEIDSWEB_DATA_ACCESS
                 foreach (DataRow fila in res.Rows)
                 {
 
-                    arc = new Archivo()
+                    lista.Add(new Archivo()
                     {
+                        Version= Convert.ToInt32(fila[0]),
                         IdArchivo = Convert.ToInt32(fila[1]),
                         NombreArchivo= fila[2].ToString(),
-                        
-                    };
-
-                    lista.Add(new Almacenamiento()
-                    {
-
                         Extension = fila[3].ToString(),
                         Revision = fila[4].ToString(),
-                        VersionArchivo= Convert.ToInt32(fila[0]),
-                        Archivo = arc
-                    });  
+                        IdMetadata = Convert.ToInt32(fila[5])
+                    });
+
                 }
             }
             return lista;

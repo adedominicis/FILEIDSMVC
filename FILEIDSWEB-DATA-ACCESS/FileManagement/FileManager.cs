@@ -48,18 +48,30 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         public Almacenamiento IngresarFichero(Almacenamiento alm,out bool resIngresarFichero)
         {
             resIngresarFichero = false;
-            //Setear ruta de almacenamiento.
-            alm.RutaAlmacenamiento = ConfigurationManager.AppSettings["FileCachePath"].ToString();
-
-            if (CargarFicheroEnLocal(alm))
+            try
             {
-                alm = CrearActualizarAlmacenamiento(alm, out resIngresarFichero);
-                if (!resIngresarFichero)
+
+                //Setear ruta de almacenamiento.
+                alm.RutaRaiz = ConfigurationManager.AppSettings["FileCachePath"].ToString();
+
+                if (CargarFicheroEnLocal(alm))
                 {
-                    EliminarArchivoEnLocal(alm);
+                    alm = CrearActualizarAlmacenamiento(alm, out resIngresarFichero);
+                    if (!resIngresarFichero)
+                    {
+                        EliminarArchivoEnLocal(alm);
+                    }
                 }
+                return alm;
             }
-            return alm;
+            catch (Exception e)
+            {
+
+                throw;
+            }
+           
+            
+
         }
 
         /// <summary>
@@ -70,7 +82,7 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         public bool ActualizarMetadata(Almacenamiento alm)
         {
             //Setear ruta de almacenamiento.
-            alm.RutaAlmacenamiento = ConfigurationManager.AppSettings["FileCachePath"].ToString();
+            alm.RutaRaiz = ConfigurationManager.AppSettings["FileCachePath"].ToString();
 
             dao.singleReturnQuery(q.InicializarMetadata(alm));
             return true;
@@ -95,7 +107,7 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
             try
             {
                 //Si no existe el directorio raiz, crearlo.
-                if (Directory.Exists(alm.RutaAlmacenamiento))
+                if (Directory.Exists(alm.RutaRaiz))
                 {
                     File.Delete(alm.getLocalStoragePath());
                     return !File.Exists(alm.getLocalStoragePath());
@@ -121,15 +133,23 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
             try
             {
                 //Si no existe el directorio raiz, crearlo.
-                if (!Directory.Exists(alm.RutaAlmacenamiento))
+                if (!Directory.Exists(alm.RutaRaiz))
                 {
-                    Directory.CreateDirectory(alm.RutaAlmacenamiento);
+                    Directory.CreateDirectory(alm.RutaRaiz);
                 }
+
+
 
                 //Guardar archivo físico
                 alm.ArchivoFisico.SaveAs(alm.getLocalStoragePath());
-
-                return File.Exists(alm.getLocalStoragePath());
+                //Calcular MD5 del archivo.
+                
+                if (File.Exists(alm.getLocalStoragePath()))
+                {
+                    alm.MD5 = GetMD5(alm.getLocalStoragePath());
+                    return true;
+                }
+                return false;
 
             }
             catch (Exception ex)
@@ -147,46 +167,61 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         private Almacenamiento CrearActualizarAlmacenamiento(Almacenamiento alm,out bool TransactionResult)
         {
             TransactionResult = false;
-
-            alm.MD5= GetMD5(alm.ArchivoFisico);
-
-            //Id del almacenamiento donde se encuentra el MD5
-            string IdAlmMd5Existente = dao.singleReturnQuery(q.VerificarMD5(alm.MD5));
-
-            if (string.IsNullOrEmpty(IdAlmMd5Existente))
+            try
             {
-                //El MD5 del archivo suministrado no existe en la DB
-                int IdArchivoExistente = Convert.ToInt32(dao.singleReturnQuery(q.VerificarNombresDuplicados(alm)));
+                //Id del almacenamiento donde se encuentra el MD5
+                string IdAlmMd5Existente = dao.singleReturnQuery(q.VerificarMD5(alm.MD5));
 
-                if (IdArchivoExistente != 0)
+                if (string.IsNullOrEmpty(IdAlmMd5Existente))
                 {
-                    //Crear una nueva version del archivo con ID_ARCHIVO= IdArchivoExistente
-                    
-                    return alm;
+                    //El MD5 del archivo suministrado no existe en la DB
+                    int IdArchivoExistente = Convert.ToInt32(dao.singleReturnQuery(q.VerificarNombresDuplicados(alm)));
+
+                    if (IdArchivoExistente != 0)
+                    {
+                        //Crear una nueva version del archivo con ID_ARCHIVO= IdArchivoExistente
+
+                        return alm;
+                    }
+                    else
+                    {
+                        //Agregar archivo nuevo y actualizar propiedades desde la base de datos
+                        DataTable CrearArchivoResponse = dao.genericSelectQuery(q.CrearArchivo(alm));
+                        if (CrearArchivoResponse != null)
+                        {
+                            if (CrearArchivoResponse.Columns.Count==1)
+                            {
+                                CrearArchivoResponse.Rows[0].Field<string>("ERROR");
+                                //[TODO] Esta aplicación necesita serilog. Aqui hay que logear el error
+                            }
+                            else
+                            {
+                                alm.Archivo.IdArchivo = CrearArchivoResponse.Rows[0].Field<int>("ID_ARCHIVO");
+                                alm.VersionArchivo = CrearArchivoResponse.Rows[0].Field<int>("VERSION_ARCHIVO");
+                                alm.IdAlmacenamiento = CrearArchivoResponse.Rows[0].Field<int>("ID_ALMACENAMIENTO");
+                                alm.RutaRaiz = CrearArchivoResponse.Rows[0].Field<string>("RUTA_ALMACENAMIENTO");
+                                alm.Metadata.IdMetadata = CrearArchivoResponse.Rows[0].Field<int>("ID_METADATA");
+                                TransactionResult = true;
+                            }
+
+                        }
+                        return alm;
+
+                    }
                 }
                 else
                 {
-                    //Agregar archivo nuevo y actualizar propiedades desde la base de datos
-                    DataTable CrearArchivoResponse=dao.genericSelectQuery(q.CrearArchivo(alm));
-                    if (CrearArchivoResponse!=null)
-                    {
-                        alm.Archivo.IdArchivo = CrearArchivoResponse.Rows[0].Field<int>("ID_ARCHIVO");
-                        alm.VersionArchivo = CrearArchivoResponse.Rows[0].Field<int>("VERSION_ARCHIVO");
-                        alm.IdAlmacenamiento = CrearArchivoResponse.Rows[0].Field<int>("ID_ALMACENAMIENTO");
-                        alm.RutaAlmacenamiento = CrearArchivoResponse.Rows[0].Field<string>("RUTA_ALMACENAMIENTO");
-                        alm.Metadata.IdMetadata = CrearArchivoResponse.Rows[0].Field<string>("ID_METADATA");
-                        TransactionResult = true;
-                    }
+                    //El MD5 del archivo suministrado existe en la DB. Funcionalidad pendiente.
+                    TransactionResult = false;
                     return alm;
-
                 }
             }
-            else
+            catch (Exception e)
             {
-                //El MD5 del archivo suministrado existe en la DB. Funcionalidad pendiente.
-                TransactionResult = false;
-                return alm;
+
+                throw;
             }
+
 
         }
 
@@ -195,12 +230,13 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         /// </summary>
         /// <param name="file">Objeto archivo.</param>
         /// <returns></returns>
-        private string GetMD5(HttpPostedFileBase file)
+        private string GetMD5(string path)
         {
             byte[] MD5ByteArray;
             using (var md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(file.FileName))
+                
+                using (var stream = File.OpenRead(path))
                 {
                     MD5ByteArray=md5.ComputeHash(stream);
                 }

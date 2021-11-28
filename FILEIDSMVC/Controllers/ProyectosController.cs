@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FILEIDSMVC.DataTransferFunctions;
 
 namespace FILEIDSMVC.Controllers
 {
@@ -43,8 +44,6 @@ namespace FILEIDSMVC.Controllers
             return View("Proyectos", pvm);
         }
 
-
-
         /// <summary>
         /// Lista todos los archivos de un subdirectorio
         /// </summary>
@@ -54,7 +53,7 @@ namespace FILEIDSMVC.Controllers
         {
             pvm.DirectoriosRaiz = dao.ListarDirectorioRaiz();
             pvm.SubDirectorios = dao.ListarSubDirectorios(pvm.IdDirectorioRaizActivo);
-            pvm.Almacenamientos = dao.ListarArchivosSubDirectorio(pvm.IdSubDirectorioActivo);
+            pvm.Archivos = dao.ListarArchivosSubDirectorio(pvm.IdSubDirectorioActivo);
             return View("Proyectos", pvm);
         }
 
@@ -85,17 +84,13 @@ namespace FILEIDSMVC.Controllers
                         DescriptorDirectorio = cProyVm.DescriptorProyecto
                     };
                     dao.singleReturnQuery(q.CrearDirectorioRaiz(dir));
-
-                    //[TODO] Debe haber una manera mas elegante de hacer esto.
-                    //pvm.DirectoriosRaiz = dao.ListarDirectorioRaiz();
-                    //return View("Proyectos", pvm);
+                    return Proyectos();
                 }
                 else
                 {
                     return View(cProyVm);
                 }
 
-                return Proyectos();
             }
             catch (Exception ex)
             {
@@ -127,9 +122,7 @@ namespace FILEIDSMVC.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="IdDirPadre"></param>
-        /// <param name="IdDirRaiz"></param>
-        /// <param name="NombreDirPadre"></param>
+        /// <param name="cSubDirVm"></param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult CrearSubDirectorio(CrearDirectorioViewModel cSubDirVm)
@@ -176,7 +169,7 @@ namespace FILEIDSMVC.Controllers
             RegistrarArchivoViewModel ravm = new RegistrarArchivoViewModel()
             {
                 NombreDirectorio = NombreDirPadre,
-                IdCarpetaPadre = IdDirPadre
+                IdDirectorioPadre = IdDirPadre
             };
 
             return View("RegistrarArchivo", ravm);
@@ -201,9 +194,10 @@ namespace FILEIDSMVC.Controllers
                     
                     if (resProcesoRegistro)
                     {
-                        return View("Proyectos", pvm);
+                        //Algun mensaje aqui de éxito aca.
+                        return Proyectos();
                     }
-                    return View("Proyectos", pvm);
+                    return Proyectos();
                 }
                 else
                 {
@@ -216,7 +210,6 @@ namespace FILEIDSMVC.Controllers
                 return View("Proyectos", pvm);
             }
         }
-
 
         #endregion
 
@@ -250,8 +243,10 @@ namespace FILEIDSMVC.Controllers
             if (ravm.ArchivoSubido.ContentLength > 0)
             {
 
-                //Asignar nombre de archivo
+                //Asignar nombre de archivo y extensión SIN PUNTO.
                 ravm.NombreArchivoSubido = Path.GetFileNameWithoutExtension(ravm.ArchivoSubido.FileName);
+                ravm.Extension = Path.GetExtension(ravm.ArchivoSubido.FileName).Replace(".", "");
+                
 
                 //Si el usuario decide omitir el nombre del archivo, se usa el nombre del archivo subido.
                 if (string.IsNullOrEmpty(ravm.NombreArchivo))
@@ -261,7 +256,9 @@ namespace FILEIDSMVC.Controllers
 
                 //Iniciar proceso de ingreso de archivos.
                 FileManager fm = new FileManager();
-                alm = fm.IngresarFichero(AlmacenamientoDataAccessMapper(ravm), out bool resultado);
+
+                //Se usa una función de transferencia estática para traducir desde el view model ravm al modelo alm
+                alm = fm.IngresarFichero(DTO.RegArchivo_AlmacenamientoDTO(ravm), out bool resultado);
                 if (resultado)
                 {
                     //Fichero ingresado correctamente, ingresar metadata.
@@ -271,44 +268,6 @@ namespace FILEIDSMVC.Controllers
             return alm;
         }
 
-        /// <summary>
-        /// Conversor del ViewModel al Data Access Model para la clase Almacenamiento del Data Access Model.
-        /// </summary>
-        /// <param name="ravm"></param>
-        /// <returns></returns>
-        private Almacenamiento AlmacenamientoDataAccessMapper(RegistrarArchivoViewModel ravm)
-        {
-            //Objetos de almacenamiento.
-            Metadata met = new Metadata()
-            {
-                DescriptorEs = ravm.DescriptorEs,
-                DescriptorEn = ravm.DescriptorEn,
-                DescriptorExtra = ravm.DescriptorExtra,
-                Oemsku=ravm.OemSku
-            };
-            Directorio dir = new Directorio()
-            {
-                NombreDirectorio = ravm.NombreDirectorio,
-                IdDirectorioPadre = ravm.IdCarpetaPadre
-            };
-
-            Archivo arc = new Archivo()
-            {
-                IdDirectorioPadre = ravm.IdCarpetaPadre,
-                NombreArchivo = ravm.NombreArchivo,
-                DirectorioPadre = dir
-            };
-            Almacenamiento alm = new Almacenamiento(ConfigurationManager.AppSettings["FileCachePath"].ToString())
-            {
-                ArchivoFisico = ravm.ArchivoSubido,
-                Extension = ravm.Extension,
-                Archivo = arc,
-                Metadata=met
-                
-            };
-
-            return alm;
-        }
         #endregion
 
 

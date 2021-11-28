@@ -6,9 +6,17 @@ using System.Web;
 
 namespace FILEIDSMVC.Models
 {
-    public class RegistrarArchivoViewModel
+    /// <summary>
+    /// ViewModel de una vista en la que se editan los metadatos de un archivo particular.
+    /// </summary>
+    public class EditarMetadataViewModel
     {
         #region Propiedades Publicas
+        /// <summary>
+        /// Versiones del archivo tratado
+        /// </summary>
+        [Display(Name = "Versión")]
+        public List<int> Versiones { get; private set; }
 
         /// <summary>
         /// Nombre del directorio al que pertenece el archivo
@@ -22,24 +30,10 @@ namespace FILEIDSMVC.Models
         public int IdArchivo { get; set; }
 
         /// <summary>
-        /// Nombre del archivo.
-        /// </summary>
-        [Display(Name = "Nombre del archivo")]
-        [MaxLength(50, ErrorMessage = "El nombre del archivo no debe exceder 50 caracteres")]
-        public string NombreArchivo { get; set; }
-
-        /// <summary>
         /// id_carpeta_padre en tabla ARCHIVOS
         /// IdExtension de la carpeta en la que se encuentra el archivo.
         /// </summary>
         public int IdDirectorioPadre { get; set; }
-
-
-        /// <summary>
-        /// True para archivos activos, false para archivos eliminados.
-        /// </summary>
-        public bool EsActivo { get; set; }
-
 
         /// <summary>
         /// Descriptor en español
@@ -65,29 +59,20 @@ namespace FILEIDSMVC.Models
         public string DescriptorExtra { get; set; }
 
         /// <summary>
-        /// Numero de parte OEM, si correspondiese.
+        /// Numero de parte OEM
         /// </summary>
         [Display(Name = "N° de parte OEM")]
         public string OemSku { get; set; }
 
 
         /// <summary>
-        /// Ruta del archivo
-        /// </summary>
-        [Display(Name = "Cargar Archivo")]
-        public string NombreArchivoSubido { get; set; }
-
-        /// <summary>
         /// Extensión del archivo
         /// </summary>
         public string Extension { get; set; }
 
-        /// <summary>
-        /// Archivo subido
-        /// </summary>
-        public HttpPostedFileBase ArchivoSubido { get; set; }
-
-
+        public string NombreArchivo { get; set; }
         #endregion
+
+
     }
 }

@@ -20,6 +20,7 @@ declare @IdArchivoDuplicado int
 	@IdDirectorioPadre=ARCHIVOS.ID_CARPETA_PADRE AND
 	ALMACENAMIENTO.ID_EXTENSION=EXTENSIONES.ID_EXTENSION AND
 	ARCHIVOS.ID_ARCHIVO=ALMACENAMIENTO.ID_ARCHIVO
-
+	
+	set @IdArchivoDuplicado=isnull(@IdArchivoDuplicado,0)
 	select @IdArchivoDuplicado
 end
