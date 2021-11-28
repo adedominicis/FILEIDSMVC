@@ -5,7 +5,6 @@ No se crean ni se actualizan partids en este procedimiento, puesto que debe habe
 */
 CREATE PROCEDURE [dbo].[ActualizarMetadata]
 	@IdArchivo int,
-	@VersionArchivo int,
 	@DescriptorEs varchar(500),
 	@DescriptorEn varchar(500),
 	@Oemsku varchar(500),
@@ -19,13 +18,16 @@ declare @IdExtension int
 declare @IdMetadata int
 declare @RutaAlmacenamiento varchar(256)
 declare @IdAlmacenamiento int
+declare @UltimaVersion int
 
 	begin transaction T1
 		begin try
 
+		--Obtener ultima version del archivo
+			set @UltimaVersion=(select top 1 version_archivo from almacenamiento where almacenamiento.id_archivo=@IdArchivo order by version_archivo desc)
 			-- Obtener extension del archivo
 				set @IdExtension=(select extensiones.id_extension from extensiones,almacenamiento 
-				where extensiones.id_extension=almacenamiento.id_extension and id_archivo=@IdArchivo and version_archivo=@VersionArchivo)
+				where extensiones.id_extension=almacenamiento.id_extension and id_archivo=@IdArchivo and version_archivo=@UltimaVersion)
 
 			if @CrearNuevaVersion=1
 			begin
@@ -37,17 +39,17 @@ declare @IdAlmacenamiento int
 				--Copiar la ruta actual, dado que no se agrega un nuevo archivo en la versión
 
 				set @RutaAlmacenamiento=(select ruta from almacenamiento 
-				where id_archivo=@IdArchivo and version_archivo=@VersionArchivo)
+				where id_archivo=@IdArchivo and version_archivo=@UltimaVersion)
 
 				insert into almacenamiento(ruta,id_archivo,version_archivo,id_metadata,id_extension,id_revision)
-				values(@RutaAlmacenamiento,@IdArchivo,@VersionArchivo+1,@IdMetadata,@IdExtension,1)
+				values(@RutaAlmacenamiento,@IdArchivo,@UltimaVersion+1,@IdMetadata,@IdExtension,1)
 
 				select 1 as 'INFO'
 			end
 			else
 			begin
 				set @IdMetadata=(select id_metadata from almacenamiento 
-				where id_archivo=@IdArchivo and version_archivo=@VersionArchivo)
+				where id_archivo=@IdArchivo and version_archivo=@UltimaVersion)
 				--Actualizar los metadatos existentes.
 				update metadata
 				set descriptores=@DescriptorEs,

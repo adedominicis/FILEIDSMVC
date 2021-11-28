@@ -54,5 +54,35 @@ namespace FILEIDSMVC.DataTransferFunctions
 
             return alm;
         }
+
+        /// <summary>
+        /// DATA TRANSFER OBJECT
+        /// Desde: Consulta Ajax en controlador metadatos -MetadataController-
+        /// Hasta: Model del data access -Almacenamiento-
+        /// [TODO]
+        /// Mejoras posibles: Recibir el view model que corresponde a los metadatos en lugar de los datos discretos.
+        /// </summary>
+        public static Almacenamiento AjaxMetadata_AlmacenamientoDTO(int IdArchivo, string DescriptorEs, string DescriptorEn, string DescriptorExtra, string @OemSku)
+        {
+            //Objetos de almacenamiento.
+            Metadata met = new Metadata()
+            {
+                DescriptorEs = DescriptorEs,
+                DescriptorEn = DescriptorEn,
+                DescriptorExtra = DescriptorExtra,
+                Oemsku = OemSku
+            };
+
+            Archivo arc = new Archivo()
+            {
+                IdArchivo = IdArchivo
+            };
+            Almacenamiento alm = new Almacenamiento(ConfigurationManager.AppSettings["FileCachePath"].ToString())
+            {
+                Archivo = arc,
+                Metadata = met
+            };
+            return alm;
+        }
     }
 }

@@ -56,20 +56,45 @@ namespace FILEIDSWEB_DATA_ACCESS
         }
 
         /// <summary>
+        /// Obtiene un listado simple con las versiones existentes de un archivo en el sistema.
+        /// </summary>
+        /// <param name="idArchivo"></param>
+        /// <returns></returns>
+        public string ListarNumerosVersiones(int idArchivo)
+        {
+            return string.Format("exec ListarNumerosVersiones {0}", idArchivo);
+        }
+
+        /// <summary>
         /// Inicializar la metadata de un archivo que se acaba de crear.
         /// </summary>
         /// <param name="alm"></param>
         /// <returns></returns>
-        internal string InicializarMetadata(Almacenamiento alm)
+        public string InicializarMetadata(Almacenamiento alm)
         {
-            return string.Format("exec ActualizarMetadata {0},{1},'{2}','{3}','{4}','{5}',{6}",
+            return string.Format("exec ActualizarMetadata {0},'{1}','{2}','{3}','{4}',{5}",
             alm.Archivo.IdArchivo,
-            alm.VersionArchivo,
             alm.Metadata.DescriptorEs,
             alm.Metadata.DescriptorEn,
             alm.Metadata.Oemsku,
             alm.Metadata.DescriptorExtra,0);
         }
+
+        /// <summary>
+        /// Crear una nueva versión del archivo actualizando la metadata.
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns></returns>
+        public string ActualizarMetadata(Almacenamiento alm)
+        {
+            return string.Format("exec ActualizarMetadata {0},'{1}','{2}','{3}','{4}',{5}",
+            alm.Archivo.IdArchivo,
+            alm.Metadata.DescriptorEs,
+            alm.Metadata.DescriptorEn,
+            alm.Metadata.Oemsku,
+            alm.Metadata.DescriptorExtra, 1);
+        }
+
 
         /// <summary>
         /// Crear nuevo archivo en la DB y el storage

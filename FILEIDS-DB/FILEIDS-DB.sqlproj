@@ -96,6 +96,7 @@
     <Build Include="dbo\Stored Procedures\ListarArchivosSubDirectorio.sql" />
     <Build Include="dbo\Stored Procedures\VerificarMD5.sql" />
     <Build Include="dbo\Stored Procedures\VerificarNombresDuplicados.sql" />
+    <Build Include="dbo\Stored Procedures\ListarNumerosVersiones.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="FILEIDS-DB.refactorlog" />
