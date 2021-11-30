@@ -190,9 +190,7 @@ namespace FILEIDSMVC.Controllers
                 if (ModelState.IsValid)
                 {
                     //Registrar archivo...
-                    InitProcesoRegistro(ravm, out bool resProcesoRegistro);
-                    
-                    if (resProcesoRegistro)
+                    if (AccesoFileManager(ravm))
                     {
                         //Algun mensaje aqui de éxito aca.
                         return Proyectos();
@@ -215,7 +213,6 @@ namespace FILEIDSMVC.Controllers
 
         #region Comentados
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -234,20 +231,16 @@ namespace FILEIDSMVC.Controllers
 
 
         #region Helpers
-        private Almacenamiento InitProcesoRegistro(RegistrarArchivoViewModel ravm,out bool resProcesoRegistro)
+        private bool AccesoFileManager(RegistrarArchivoViewModel ravm)
         {
-            Almacenamiento alm = new Almacenamiento();
-            resProcesoRegistro = false;
 
             //Si el archivo no viene vacío.
             if (ravm.ArchivoSubido.ContentLength > 0)
             {
-
                 //Asignar nombre de archivo y extensión SIN PUNTO.
                 ravm.NombreArchivoSubido = Path.GetFileNameWithoutExtension(ravm.ArchivoSubido.FileName);
                 ravm.Extension = Path.GetExtension(ravm.ArchivoSubido.FileName).Replace(".", "");
                 
-
                 //Si el usuario decide omitir el nombre del archivo, se usa el nombre del archivo subido.
                 if (string.IsNullOrEmpty(ravm.NombreArchivo))
                 {
@@ -255,17 +248,12 @@ namespace FILEIDSMVC.Controllers
                 }
 
                 //Iniciar proceso de ingreso de archivos.
-                FileManager fm = new FileManager();
+                FileManager fm = new FileManager(DTO.RegArchivo_AlmacenamientoDTO(ravm));
 
                 //Se usa una función de transferencia estática para traducir desde el view model ravm al modelo alm
-                alm = fm.IngresarFichero(DTO.RegArchivo_AlmacenamientoDTO(ravm), out bool resultado);
-                if (resultado)
-                {
-                    //Fichero ingresado correctamente, ingresar metadata.
-                    resProcesoRegistro= fm.ActualizarMetadata(alm);
-                }
+                return fm.CrearOActualizarRegistrosDeArchivos();
             }
-            return alm;
+            return false;
         }
 
         #endregion

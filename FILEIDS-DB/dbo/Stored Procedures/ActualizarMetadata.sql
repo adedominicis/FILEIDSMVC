@@ -2,6 +2,11 @@
 La actualización de la metadata crea una nueva version del archivo pero no añade nuevo almacenamiento.
 Se crea una nueva version en almacenamiento y metadata que van a la misma ruta.
 No se crean ni se actualizan partids en este procedimiento, puesto que debe haber un módulo dedicado a eso.
+
+Tipos de retorno:
+select 1 as 'INFO' - Se actualizó la metadata en una nueva versión
+select 2 as 'INFO' - Se actualizó la metadata sin crear nueva version
+select 0 as 'INFO' - Error, transaccion no se ha llevado a cabo
 */
 CREATE PROCEDURE [dbo].[ActualizarMetadata]
 	@IdArchivo int,

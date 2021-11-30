@@ -20,22 +20,32 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         #region private fields
         DAO dao = new DAO();
         queryDump q = new queryDump();
+        Almacenamiento alm;
+
         #endregion
 
         #region public properties
 
+        /// <summary>
+        /// Propiedad de solo lectura que expone el almacenamiento para ser usado por DTO's en el front end.
+        /// </summary>
+        public Almacenamiento miAlmacenamiento
+        {
+            get { return alm; }
+        }
 
         #endregion
 
         #region constructors
-        public FileManager()
+        public FileManager(Almacenamiento almn)
         {
-
+            alm = almn;
         }
 
         #endregion
 
         #region Métodos públicos.
+
         /// <summary>
         /// Proceso completo de ingreso de archivos al sistema.
         /// 1- Carga de fichero en sistema de archivos
@@ -43,66 +53,203 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
         /// 3- Si el paso 2 resulta, termina el proceso.
         /// 4- Si el paso 2 no resulta, eliminar el fichero, termina el proceso.
         /// </summary>
-        /// <param name="alm"></param>
         /// <returns></returns>
-        public Almacenamiento IngresarFichero(Almacenamiento alm,out bool resIngresarFichero)
+        public bool CrearOActualizarRegistrosDeArchivos()
         {
-            resIngresarFichero = false;
             try
             {
-
                 //Setear ruta de almacenamiento.
                 alm.RutaRaiz = ConfigurationManager.AppSettings["FileCachePath"].ToString();
 
-                if (CargarFicheroEnLocal(alm))
+                //Guardar el archivo en el storage. Si tiene éxito, 
+
+                if (GuardarFicheroEnStorage())
                 {
-                    alm = CrearActualizarAlmacenamiento(alm, out resIngresarFichero);
-                    if (!resIngresarFichero)
+                    alm.MD5 = GetMD5(alm.getLocalStoragePath());
+
+                    //Verificación de referencias existentes.
+                    int IdArchivoMD5Existente = Convert.ToInt32(dao.singleReturnQuery(q.VerificarMD5(alm.MD5)));
+                    int IdArchivoNombreExistente = Convert.ToInt32(dao.singleReturnQuery(q.VerificarNombresDuplicados(alm)));
+
+                    //No existe un MD5 en el storage ni archivo con el mismo nombre en la carpeta.
+                    if (IdArchivoMD5Existente == 0 && IdArchivoNombreExistente == 0)
                     {
-                        EliminarArchivoEnLocal(alm);
+                        DataTable CrearArchivoResponse = dao.genericSelectQuery(q.CrearArchivo(alm));
+                        if (CrearArchivoResponse != null)
+                        {
+                            if (CrearArchivoResponse.Columns.Count == 1)
+                            {
+                                CrearArchivoResponse.Rows[0].Field<string>("ERROR");
+                                EliminarArchivoEnStorage();
+                                return false;
+                            }
+                            else
+                            {
+                                alm.Archivo.IdArchivo = CrearArchivoResponse.Rows[0].Field<int>("ID_ARCHIVO");
+                                alm.VersionArchivo = CrearArchivoResponse.Rows[0].Field<int>("VERSION_ARCHIVO");
+                                alm.IdAlmacenamiento = CrearArchivoResponse.Rows[0].Field<int>("ID_ALMACENAMIENTO");
+                                alm.RutaRaiz = CrearArchivoResponse.Rows[0].Field<string>("RUTA_ALMACENAMIENTO");
+                                alm.Metadata.IdMetadata = CrearArchivoResponse.Rows[0].Field<int>("ID_METADATA");
+                                if (InicializarMetadata())
+                                {
+                                    return true;
+                                }
+                                else
+                                {
+                                    EliminarArchivoEnStorage();
+                                    return false;
+                                }
+                            }
+                        }
+                        return false;
                     }
+
+                    //No existe un MD5 en el storage pero si existe un archivo con el mismo nombre
+                    if (IdArchivoMD5Existente == 0 && IdArchivoNombreExistente != 0)
+                    {
+                        alm.Archivo.IdArchivo = IdArchivoNombreExistente;
+                        if (ActualizarMetadata())
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            EliminarArchivoEnStorage();
+                            return false;
+                        }
+                    }
+
+                    //Existe un MD5 en el storage pero no existe un archivo con el mismo nombre
+                    //[TODO] Aqui es posible que se requiera que el usuario intervenga con el nombre.
+                    if (IdArchivoMD5Existente != 0 && IdArchivoNombreExistente == 0)
+                    {
+                        
+                        alm.Archivo.IdArchivo = IdArchivoMD5Existente;
+                        EliminarArchivoEnStorage();
+                        return ActualizarMetadata();
+                    }
+
+                    //Existe un MD5 en el storage y un archivo con el mismo nombre
+                    if (IdArchivoMD5Existente != 0 && IdArchivoNombreExistente != 0)
+                    {
+                        alm.Archivo.IdArchivo = IdArchivoNombreExistente;
+                        EliminarArchivoEnStorage();
+                        return ActualizarMetadata();
+                    }
+                    return false;
                 }
-                return alm;
+                else
+                {
+                    EliminarArchivoEnStorage();
+                    return false;
+                }
+
             }
             catch (Exception e)
             {
-
-                throw;
+                return false;
             }
-           
-            
-
         }
+
+
+        #endregion
+
+        #region Interacción con DB
+        /// <summary>
+        /// Inicializar metadata de un archivo nuevo.
+        /// Se entiende por archivo nuevo aquel que no tenia registros anteriores en la tabla ARCHIVOS.
+        /// La tabla ARCHIVOS almacena la representación de la entidad fisica pero no sus detalles de versión o metadata.
+        /// </summary>
+        /// <returns></returns>
+        private bool InicializarMetadata()
+        {
+            //select 1 as 'INFO' - Se actualizó la metadata en una nueva versión
+            //select 2 as 'INFO' - Se actualizó la metadata sin crear nueva version
+            //select 0 as 'INFO' - Error, transaccion no se ha llevado a cabo
+            string queryResponse = dao.singleReturnQuery(q.InicializarMetadata(alm));
+            return string.Equals(queryResponse, "2");
+        }
+
 
         /// <summary>
-        /// Actualizar metadata de un archivo.
+        /// Actualizar metadata de un archivo existente.
+        /// Se entiende por archivo nuevo aquel que no tenia registros anteriores en la tabla ARCHIVOS.
+        /// La tabla ARCHIVOS almacena la representación de la entidad fisica pero no sus detalles de versión o metadata.
         /// </summary>
-        /// <param name="alm"></param>
         /// <returns></returns>
-        public bool ActualizarMetadata(Almacenamiento alm)
+        private bool ActualizarMetadata()
         {
-            //Setear ruta de almacenamiento.
-            alm.RutaRaiz = ConfigurationManager.AppSettings["FileCachePath"].ToString();
+            //select 1 as 'INFO' - Se actualizó la metadata en una nueva versión
+            //select 2 as 'INFO' - Se actualizó la metadata sin crear nueva version
+            //select 0 as 'INFO' - Error, transaccion no se ha llevado a cabo
+            string queryResponse = dao.singleReturnQuery(q.ActualizarMetadata(alm));
 
-            dao.singleReturnQuery(q.InicializarMetadata(alm));
-            return true;
+            return string.Equals(queryResponse, "1");
 
         }
+
+
+
+
+
+
 
         #endregion
 
 
+        #region Interacción con storage
 
+        /// <summary>
+        /// Inserta los archivos físicos en el sistema de almacenamiento del backend.
+        /// </summary>
+        /// <param name="alm"></param>
+        /// <returns>True si pudo guardar archivo en local, false si no.</returns>
+        private bool GuardarFicheroEnStorage()
+        {
+            try
+            {
+                //Si no existe el directorio raiz, crearlo.
+                if (!Directory.Exists(alm.RutaRaiz))
+                {
+                    Directory.CreateDirectory(alm.RutaRaiz);
+                }
 
+                //Guardar archivo físico
+                alm.ArchivoFisico.SaveAs(alm.getLocalStoragePath());
 
-        #region Métodos privados
+                return File.Exists(alm.getLocalStoragePath());
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Obtener el MD5 del archivo en un string
+        /// </summary>
+        /// <param name="path">Ruta absoluta del archivo</param>
+        /// <returns></returns>
+        private string GetMD5(string path)
+        {
+            byte[] MD5ByteArray;
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(path))
+                {
+                    MD5ByteArray = md5.ComputeHash(stream);
+                }
+            }
+
+            return BitConverter.ToString(MD5ByteArray).Replace("-", "").ToLowerInvariant();
+        }
 
         /// <summary>
         /// Borra la copia física de un archivo en el sistema de almacenamiento del backend
         /// </summary>
         /// <param name="alm"></param>
         /// <returns></returns>
-        private bool EliminarArchivoEnLocal(Almacenamiento alm)
+        private bool EliminarArchivoEnStorage()
         {
             try
             {
@@ -122,129 +269,6 @@ namespace FILEIDSWEB_DATA_ACCESS.FileManagement
                 return false;
             }
         }
-
-        /// <summary>
-        /// Inserta los archivos físicos en el sistema de almacenamiento del backend.
-        /// </summary>
-        /// <param name="alm"></param>
-        /// <returns>True si pudo guardar archivo en local, false si no.</returns>
-        private bool CargarFicheroEnLocal(Almacenamiento alm)
-        {
-            try
-            {
-                //Si no existe el directorio raiz, crearlo.
-                if (!Directory.Exists(alm.RutaRaiz))
-                {
-                    Directory.CreateDirectory(alm.RutaRaiz);
-                }
-
-
-
-                //Guardar archivo físico
-                alm.ArchivoFisico.SaveAs(alm.getLocalStoragePath());
-                //Calcular MD5 del archivo.
-                
-                if (File.Exists(alm.getLocalStoragePath()))
-                {
-                    alm.MD5 = GetMD5(alm.getLocalStoragePath());
-                    return true;
-                }
-                return false;
-
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Controla la inserción de archivos en la base de datos.
-        /// Este metodo es invocado cuando es seguro que el archivo físico fue almacenado en una caché
-        /// </summary>
-        /// <param name="alm"></param>
-        /// <returns></returns
-        private Almacenamiento CrearActualizarAlmacenamiento(Almacenamiento alm,out bool TransactionResult)
-        {
-            TransactionResult = false;
-            try
-            {
-                //Id del almacenamiento donde se encuentra el MD5
-                string IdAlmMd5Existente = dao.singleReturnQuery(q.VerificarMD5(alm.MD5));
-
-                if (string.IsNullOrEmpty(IdAlmMd5Existente))
-                {
-                    //El MD5 del archivo suministrado no existe en la DB
-                    int IdArchivoExistente = Convert.ToInt32(dao.singleReturnQuery(q.VerificarNombresDuplicados(alm)));
-
-                    if (IdArchivoExistente != 0)
-                    {
-                        //Crear una nueva version del archivo con ID_ARCHIVO= IdArchivoExistente
-
-                        return alm;
-                    }
-                    else
-                    {
-                        //Agregar archivo nuevo y actualizar propiedades desde la base de datos
-                        DataTable CrearArchivoResponse = dao.genericSelectQuery(q.CrearArchivo(alm));
-                        if (CrearArchivoResponse != null)
-                        {
-                            if (CrearArchivoResponse.Columns.Count==1)
-                            {
-                                CrearArchivoResponse.Rows[0].Field<string>("ERROR");
-                                //[TODO] Esta aplicación necesita serilog. Aqui hay que logear el error
-                            }
-                            else
-                            {
-                                alm.Archivo.IdArchivo = CrearArchivoResponse.Rows[0].Field<int>("ID_ARCHIVO");
-                                alm.VersionArchivo = CrearArchivoResponse.Rows[0].Field<int>("VERSION_ARCHIVO");
-                                alm.IdAlmacenamiento = CrearArchivoResponse.Rows[0].Field<int>("ID_ALMACENAMIENTO");
-                                alm.RutaRaiz = CrearArchivoResponse.Rows[0].Field<string>("RUTA_ALMACENAMIENTO");
-                                alm.Metadata.IdMetadata = CrearArchivoResponse.Rows[0].Field<int>("ID_METADATA");
-                                TransactionResult = true;
-                            }
-
-                        }
-                        return alm;
-
-                    }
-                }
-                else
-                {
-                    //El MD5 del archivo suministrado existe en la DB. Funcionalidad pendiente.
-                    TransactionResult = false;
-                    return alm;
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-
-
-        }
-
-        /// <summary>
-        /// Obtener el MD5 del archivo en un string
-        /// </summary>
-        /// <param name="file">Objeto archivo.</param>
-        /// <returns></returns>
-        private string GetMD5(string path)
-        {
-            byte[] MD5ByteArray;
-            using (var md5 = MD5.Create())
-            {
-                
-                using (var stream = File.OpenRead(path))
-                {
-                    MD5ByteArray=md5.ComputeHash(stream);
-                }
-            }
-
-            return BitConverter.ToString(MD5ByteArray).Replace("-", "").ToLowerInvariant();
-        }
-
         #endregion
 
         #region Legacy y por corregir.
